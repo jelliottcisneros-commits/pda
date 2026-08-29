@@ -20,9 +20,9 @@ class AccessCodeModelTest(TestCase):
 
 class AbstractUserModelTest(TestCase):
     def test_abstractuser_has_name(self):
-        """Tests if name attribute works"""
-        abstract_user = AbstractUser(first_name="Bob", last_name="Smith", email="fake@email.com")
-        self.assertIn('Bob Smith (fake@email.com)', str(abstract_user))
+        """Tests inherited name display behavior on a concrete subclass"""
+        user = User(first_name="Bob", last_name="Smith", email="fake@email.com")
+        self.assertIn('Bob Smith (fake@email.com)', str(user))
 
 
 class QuestionModelTest(TestCase):

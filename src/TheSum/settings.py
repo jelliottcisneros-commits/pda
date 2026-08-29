@@ -316,3 +316,5 @@ SECURE_REFERRER_POLICY = env('SECURE_REFERRER_POLICY', default='same-origin')
 
 if env_bool('USE_X_FORWARDED_PROTO', default=IS_PRODUCTION):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

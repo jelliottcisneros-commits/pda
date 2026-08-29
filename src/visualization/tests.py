@@ -12,7 +12,7 @@ from visualization.views import VisualizationIndexView, DemographicsVisualizatio
 
 # HELPER FUNCTIONS
 def filter_out_fields_without_choices(all_fields):
-    return list(filter(lambda field: len(field.choices) > 0, all_fields))
+    return list(filter(lambda field: field.choices, all_fields))
 
 def set_demographic_field(demographic, field):
     choices = field.choices

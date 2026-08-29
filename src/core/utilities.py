@@ -2,7 +2,7 @@ import io
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.contrib.staticfiles import finders
 from reportlab.graphics import renderPDF
 from reportlab.graphics.charts.barcharts import HorizontalBarChart3D, VerticalBarChart3D

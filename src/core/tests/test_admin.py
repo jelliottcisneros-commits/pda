@@ -43,9 +43,12 @@ class UserAdminTest(TestCase):
         self.assessment = create_assessment(self.user)
         self.demographic = create_demographic(self.assessment)
         response = self.client.get('/admin/core/user/1/change')
-        expected_url = '/admin/core/user/1/change/'
-        self.assertRedirects(response, expected_url, status_code=301,
-                             target_status_code=302, msg_prefix='', fetch_redirect_response=True)
+        self.assertRedirects(
+            response,
+            '/admin/login/?next=/admin/core/user/1/change',
+            status_code=302,
+            target_status_code=200,
+        )
 
     def test_has_view_permission_method_when_obj_is_not_none(self):
         """returns whether the user has obj view permission"""
@@ -355,9 +358,12 @@ class DemographicAdminTest(TestCase):
         self.assessment = create_assessment(self.user)
         self.demographic = create_demographic(self.assessment)
         response = self.client.get('/admin/core/demographic/1/change')
-        expected_url = '/admin/core/demographic/1/change/'
-        self.assertRedirects(response, expected_url, status_code=301,
-                             target_status_code=302, msg_prefix='', fetch_redirect_response=True)
+        self.assertRedirects(
+            response,
+            '/admin/login/?next=/admin/core/demographic/1/change',
+            status_code=302,
+            target_status_code=200,
+        )
 
     def test_demographic_model_is_registered(self):
         """Should find a DemographicAdmin object for Demographic model in admin_site's registry"""

@@ -21,9 +21,9 @@ password_reset_urls = [
     path('admin/reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 
-urlpatterns = [
+urlpatterns = password_reset_urls + [
                   path('admin/', admin_site.urls),
                   path('paypal/', include('paypal.standard.ipn.urls')),
                   path('visualization/', include('visualization.urls')),
                   path('', include('core.urls')),
-              ] + password_reset_urls + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
