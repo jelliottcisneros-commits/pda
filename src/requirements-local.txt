@@ -8,18 +8,15 @@ pytz==2019.3
 sqlparse==0.5.5
 django-paypal==2.1
 https://github.com/darklow/django-suit/tarball/v2
-reportlab==3.6.13
+reportlab>=4.4,<5
 boto3==1.39.17
 django-storages==1.14.6
-bokeh==1.4.0
+bokeh==3.8.2
 django-guardian==2.4.0
 django-ses==3.6.0
 mock==5.2.0
 
-# Compatibility pins for Bokeh 1.4 and the macOS system Python SSL stack.
-Jinja2<3
-MarkupSafe<2
-numpy<2
+# Compatibility pin retained for the macOS SSL stack.
 urllib3<2
 
 botocore==1.39.17

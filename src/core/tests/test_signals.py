@@ -25,7 +25,7 @@ class ConsultantPostSaveSignalHandlerTests(TestCase):
         response = self.client.post('/admin/login/?next=/admin/',
                                     data=dict(username=self.username, password=self.password))
         self.assertEqual(response.status_code, 302)
-        self.assertEquals(response.url, '/admin/')
+        self.assertEqual(response.url, '/admin/')
 
     def test_consultant_has_perm_to_view_all_demographics(self):
         # users in the consultant group do not have ability to view all demographics data

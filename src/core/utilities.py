@@ -24,10 +24,9 @@ from .models import *
 
 
 def generate_graph():
-    bc = VerticalBarChart3D()
+    bc = VerticalBarChart()
     bc.x = 0
     bc.y = 0
-    bc.zDepth = 0.05 * inch
     bc.height = 1.8 * inch
     bc.width = 2.8 * inch
     bc.strokeColor = colors.black
@@ -47,10 +46,9 @@ def generate_graph():
 
 
 def generate_total_graph():
-    bc = VerticalBarChart3D()
+    bc = VerticalBarChart()
     bc.x = 0
     bc.y = 0
-    bc.zDepth = 0.05 * inch  # "3D-ness of graph"
     bc.height = 1.8 * inch  # graph height
     bc.width = 2.8 * inch  # graph width
     bc.barLabelFormat = '%s'

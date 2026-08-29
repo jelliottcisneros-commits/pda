@@ -61,7 +61,7 @@ class GetDemographicFieldToChoicesMapFunctionTests(TestCase):
             with self.subTest(field=field):
                 expected = field.choices
                 actual = self.demographic_field_to_choices_map[field.name]
-                self.assertEquals(expected, actual)
+                self.assertEqual(expected, actual)
 
 
 class GetFieldsDictFunctionTests(TestCase):
@@ -76,4 +76,4 @@ class GetFieldsDictFunctionTests(TestCase):
             "Email": "email@domain.com",
             "Phone": "111-111-1111",
         }
-        self.assertEquals(field_dict, expected)
+        self.assertEqual(field_dict, expected)

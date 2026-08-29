@@ -17,7 +17,7 @@ class UnverifiedUserAdminTests(TestCase):
         """Should return a UnverifiedUserModelAdmin obj for the model UnverifiedUser in admin_site.url"""
         unverified_user_admin = admin_site._registry.get(UnverifiedUser)
         self.assertIsNotNone(unverified_user_admin)
-        self.assertEquals(unverified_user_admin.__class__, UnverifiedUserAdmin)
+        self.assertEqual(unverified_user_admin.__class__, UnverifiedUserAdmin)
 
 
 class UserAdminTest(TestCase):
@@ -35,7 +35,7 @@ class UserAdminTest(TestCase):
         """Should return a UserModelAdmin obj for the model User in admin_site.url"""
         user_admin = admin_site._registry.get(User)
         self.assertIsNotNone(user_admin)
-        self.assertEquals(user_admin.__class__, UserAdmin)
+        self.assertEqual(user_admin.__class__, UserAdmin)
 
     def test_admin_redirect_to_user1(self):
         # testing url redirects on admin: 301 (moved permanently), 302 (found/moved temporarily)
@@ -79,7 +79,7 @@ class AccessCodeAdminTests(TestCase):
         """there should be an AccessCodeAdmin obj for the model AccessCode in admin_site.url"""
         access_code_admin = admin_site._registry.get(AccessCode)
         self.assertIsNotNone(access_code_admin)
-        self.assertEquals(access_code_admin.__class__, AccessCodeAdmin)
+        self.assertEqual(access_code_admin.__class__, AccessCodeAdmin)
 
 
 class AssessmentAdminTests(TestCase):
@@ -91,7 +91,7 @@ class AssessmentAdminTests(TestCase):
         """should be a AssessmentAdmin obj for the model Assessment in admin_site.url"""
         assessment_admin = admin_site._registry.get(Assessment)
         self.assertIsNotNone(assessment_admin)
-        self.assertEquals(assessment_admin.__class__, AssessmentAdmin)
+        self.assertEqual(assessment_admin.__class__, AssessmentAdmin)
 
     def test_has_view_permission_method_when_obj_is_none(self):
         """return True"""
@@ -116,7 +116,7 @@ class AssessmentAdminTests(TestCase):
         """Status code is 200"""
         self.client.force_login(self.consultant)
         response = self.client.get(reverse('admin:core_assessment_changelist'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_accessing_assessment_change_view_when_logged_in_consultant_has_no_view_permission(self):
         """Status code is not 200"""
@@ -125,7 +125,7 @@ class AssessmentAdminTests(TestCase):
         assert self.consultant.has_perm('view_assessment', assessment) is False  # sanity check
 
         response = self.client.get(reverse('admin:core_assessment_change', kwargs=dict(object_id=assessment.pk)))
-        self.assertNotEquals(response.status_code, 200)
+        self.assertNotEqual(response.status_code, 200)
 
     def test_accessing_assessment_change_view_when_logged_in_consultant_has_view_permission(self):
         """Status code is 200"""
@@ -135,7 +135,7 @@ class AssessmentAdminTests(TestCase):
         assert self.consultant.has_perm('view_assessment', assessment) is True  # sanity check
 
         response = self.client.get(reverse('admin:core_assessment_change', kwargs=dict(object_id=assessment.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_queryset_method(self):
         """Return only the assessments the consultant has permission for, and for superuser return all"""
@@ -162,7 +162,7 @@ class AssessmentAdminTests(TestCase):
         user = create_user()
         assessment = create_assessment(user)
         expected = ''
-        self.assertEquals(expected, self.assessment_admin.demo_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.demo_link(assessment))
 
     def test_demo_link_method_when_demographic_is_not_none(self):
         """return link to demographic"""
@@ -171,14 +171,14 @@ class AssessmentAdminTests(TestCase):
         demographic = create_demographic(assessment)
         expected = mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:core_demographic_change", kwargs=(dict(object_id=demographic.pk))), demographic))
-        self.assertEquals(expected, self.assessment_admin.demo_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.demo_link(assessment))
 
     def test_score_link_method_when_score_is_none(self):
         """return empty string"""
         user = create_user()
         assessment = create_assessment(user)
         expected = ''
-        self.assertEquals(expected, self.assessment_admin.score_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.score_link(assessment))
 
     def test_score_link_method_when_score_is_not_none(self):
         """return link to score"""
@@ -189,7 +189,7 @@ class AssessmentAdminTests(TestCase):
         demographic = create_demographic(assessment)
         expected = mark_safe(
             '<a href="{}">{}</a>'.format(reverse("admin:core_score_change", kwargs=(dict(object_id=score.pk))), score))
-        self.assertEquals(expected, self.assessment_admin.score_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.score_link(assessment))
 
     def test_user_link_method_when_user_is_none(self):
         """return empty string"""
@@ -199,7 +199,7 @@ class AssessmentAdminTests(TestCase):
         user.save()
         assessment = Assessment.objects.get(pk=assessment.pk)  # refetching since assessment's user has been altered
         expected = 'User has been deleted'
-        self.assertEquals(expected, self.assessment_admin.user_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.user_link(assessment))
 
     def test_user_link_method_when_score_is_not_none(self):
         """return link to user"""
@@ -207,7 +207,7 @@ class AssessmentAdminTests(TestCase):
         assessment = create_assessment(user)
         expected = mark_safe(
             '<a href="{}">{}</a>'.format(reverse("admin:core_user_change", kwargs=(dict(object_id=user.pk))), user))
-        self.assertEquals(expected, self.assessment_admin.user_link(assessment))
+        self.assertEqual(expected, self.assessment_admin.user_link(assessment))
 
     def test_recalculate_score_method_when_score_is_none(self):
         """create new score object with the correct values for the subscores"""
@@ -227,11 +227,11 @@ class AssessmentAdminTests(TestCase):
             score = assessment.score
         except Score.DoesNotExist:
             self.fail('Score object was not created')
-        self.assertEquals(score.strength_total, 8)
+        self.assertEqual(score.strength_total, 8)
         gender_score = Gender_Score.objects.get(score=score)
-        self.assertEquals(gender_score.strength, 4)
+        self.assertEqual(gender_score.strength, 4)
         race_score = Race_Score.objects.get(score=score)
-        self.assertEquals(race_score.strength, 4)
+        self.assertEqual(race_score.strength, 4)
 
     # in the event that all the subscores were deleted but we still have the responses
     def test_recalc_when_all_subscore_missing(self):
@@ -259,14 +259,14 @@ class AssessmentAdminTests(TestCase):
         self.assertIn(expected_message, messages)
         assessment = Assessment.objects.get(pk=assessment.pk)
         self.assertTrue(assessment.score is not None)
-        self.assertEquals(assessment.score.strength_total, 8)
-        self.assertEquals(assessment.score.Race_Score.strength, 4)
-        self.assertEquals(assessment.score.Gender_Score.strength, 4)
-        self.assertEquals(assessment.score.Religion_Score.strength, 0)
-        self.assertEquals(assessment.score.Class_Score.strength, 0)
-        self.assertEquals(assessment.score.Disability_Score.strength, 0)
-        self.assertEquals(assessment.score.Sexual_Orientation_Score.strength, 0)
-        self.assertEquals(assessment.score.Culture_Score.strength, 0)
+        self.assertEqual(assessment.score.strength_total, 8)
+        self.assertEqual(assessment.score.Race_Score.strength, 4)
+        self.assertEqual(assessment.score.Gender_Score.strength, 4)
+        self.assertEqual(assessment.score.Religion_Score.strength, 0)
+        self.assertEqual(assessment.score.Class_Score.strength, 0)
+        self.assertEqual(assessment.score.Disability_Score.strength, 0)
+        self.assertEqual(assessment.score.Sexual_Orientation_Score.strength, 0)
+        self.assertEqual(assessment.score.Culture_Score.strength, 0)
 
         # in the event that some of the subscores were deleted but we still have the responses
     def test_recalc_when_some_subscore_missing(self):
@@ -291,21 +291,21 @@ class AssessmentAdminTests(TestCase):
         self.assertIn(expected_message, messages)
         assessment = Assessment.objects.get(pk=assessment.pk)
         self.assertTrue(assessment.score is not None)
-        self.assertEquals(assessment.score.strength_total, 8)
-        self.assertEquals(assessment.score.Race_Score.strength, 4)
-        self.assertEquals(assessment.score.Gender_Score.strength, 4)
-        self.assertEquals(assessment.score.Religion_Score.strength, 0)
-        self.assertEquals(assessment.score.Class_Score.strength, 0)
-        self.assertEquals(assessment.score.Disability_Score.strength, 0)
-        self.assertEquals(assessment.score.Sexual_Orientation_Score.strength, 0)
-        self.assertEquals(assessment.score.Culture_Score.strength, 0)
+        self.assertEqual(assessment.score.strength_total, 8)
+        self.assertEqual(assessment.score.Race_Score.strength, 4)
+        self.assertEqual(assessment.score.Gender_Score.strength, 4)
+        self.assertEqual(assessment.score.Religion_Score.strength, 0)
+        self.assertEqual(assessment.score.Class_Score.strength, 0)
+        self.assertEqual(assessment.score.Disability_Score.strength, 0)
+        self.assertEqual(assessment.score.Sexual_Orientation_Score.strength, 0)
+        self.assertEqual(assessment.score.Culture_Score.strength, 0)
 
 
     def test_method_detailed_view_link_when_obj_pk_is_none(self):
         """Return empty string"""
         assessment = Assessment(user=create_user(), email='')
         assert assessment.pk is None # sanity check
-        self.assertEquals('', self.assessment_admin.detailed_view_link(assessment))
+        self.assertEqual('', self.assessment_admin.detailed_view_link(assessment))
 
     def test_method_detailed_view_link_when_obj_pk_is_not_none(self):
         """Return empty string"""
@@ -369,14 +369,14 @@ class DemographicAdminTest(TestCase):
         """Should find a DemographicAdmin object for Demographic model in admin_site's registry"""
         demographic_admin = admin_site._registry.get(Demographic)
         self.assertIsNotNone(demographic_admin)
-        self.assertEquals(demographic_admin.__class__, DemographicAdmin)
+        self.assertEqual(demographic_admin.__class__, DemographicAdmin)
 
     def test_assessment_link_method(self):
         assessment = create_assessment(user=create_user())
         demographic = create_demographic(assessment=assessment)
         expected = mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:core_assessment_change", args=(assessment.pk,)), assessment))
-        self.assertEquals(expected, self.demographic_admin.assessment_link(demographic))
+        self.assertEqual(expected, self.demographic_admin.assessment_link(demographic))
 
 
 class QuestionAdminTests(TestCase):
@@ -384,13 +384,13 @@ class QuestionAdminTests(TestCase):
         """there should be a QuestionAdmin obj for the model Question in admin_site.url"""
         question_admin = admin_site._registry.get(Question)
         self.assertIsNotNone(question_admin)
-        self.assertEquals(question_admin.__class__, QuestionAdmin)
+        self.assertEqual(question_admin.__class__, QuestionAdmin)
 
     def test_change_view(self):
         login_as_super_user(self.client)
         question = create_question()
         response = self.client.get(reverse('admin:core_question_change', args=(question.pk,)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class ScoreAdminTest(TestCase):
@@ -407,7 +407,7 @@ class ScoreAdminTest(TestCase):
         """there should be a ScoreAdmin obj for the model Score in admin_site.url"""
         score_admin = admin_site._registry.get(Score)
         self.assertIsNotNone(score_admin)
-        self.assertEquals(score_admin.__class__, ScoreAdmin)
+        self.assertEqual(score_admin.__class__, ScoreAdmin)
 
     def test_admin_recalculate_score(self):
         # makes sure the recalculating score button returns the correct, matching score
@@ -561,7 +561,7 @@ class ScoreAdminTest(TestCase):
         score = Score.objects.create(assessment=assessment)
         expected = mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:core_assessment_change", args=(assessment.pk,)), assessment))
-        self.assertEquals(expected, self.score_admin.assessment_link(score))
+        self.assertEqual(expected, self.score_admin.assessment_link(score))
 
 
 class SubScoreAdminTest(TestCase):
@@ -579,7 +579,7 @@ class SubScoreAdminTest(TestCase):
             with self.subTest(model=model):
                 sub_score_admin = admin_site._registry.get(model)
                 self.assertIsNotNone(sub_score_admin)
-                self.assertEquals(sub_score_admin.__class__, SubScoreAdmin)
+                self.assertEqual(sub_score_admin.__class__, SubScoreAdmin)
 
     def test_score_link_methods_for_each_sub_score_model(self):
         """return link to score"""
@@ -593,7 +593,7 @@ class SubScoreAdminTest(TestCase):
         for model, model_admin in self.sub_score_model_to_model_admin_map.items():
             sub_score = model.objects.create(score=score)
             with self.subTest(model=model):
-                self.assertEquals(expected, model_admin.score_link(sub_score))
+                self.assertEqual(expected, model_admin.score_link(sub_score))
 
 
 class ConsultantAdminTest(TestCase):
@@ -612,7 +612,7 @@ class ConsultantAdminTest(TestCase):
         """there should be a ConsultantAdmin obj for the model Consultant in admin_site.url"""
         consultant_admin = admin_site._registry.get(Consultant)
         self.assertIsNotNone(consultant_admin)
-        self.assertEquals(consultant_admin.__class__, ConsultantAdmin)
+        self.assertEqual(consultant_admin.__class__, ConsultantAdmin)
 
     def test_response_add(self):
         # redirects to core_consultant_changelist and sends email with verify_registration_completion_link
@@ -622,20 +622,25 @@ class ConsultantAdminTest(TestCase):
 
         self.assertRedirects(response, reverse('admin:core_consultant_changelist'))
 
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         sent_email = mail.outbox[-1]
-        self.assertEquals(len(sent_email.to), 1)
-        self.assertEquals(sent_email.to[0], consultant_email)
+        self.assertEqual(len(sent_email.to), 1)
+        self.assertEqual(sent_email.to[0], consultant_email)
 
         verify_registration_completion_link_url_pattern = r'http://testserver(?P<verify_registration_completion_link_url>/[\S]+)'
         m = re.search(verify_registration_completion_link_url_pattern, sent_email.body)
         self.assertIsNotNone(m)
         resolver = get_resolver()
         resolver_match = resolver.resolve(m.group('verify_registration_completion_link_url'))
-        self.assertEquals(resolver_match.view_name, 'admin:core_consultant_verify_registration_completion_link')
+        self.assertEqual(resolver_match.view_name, 'admin:core_consultant_verify_registration_completion_link')
         new_consultant = Consultant.objects.get(email=consultant_email)
-        self.assertEquals(resolver_match.kwargs['token'], default_token_generator.make_token(new_consultant))
-        self.assertEquals(resolver_match.kwargs['uidb64'], urlsafe_base64_encode(force_bytes(new_consultant.pk)))
+        self.assertTrue(
+            default_token_generator.check_token(
+                new_consultant,
+                resolver_match.kwargs['token'],
+            )
+        )
+        self.assertEqual(resolver_match.kwargs['uidb64'], urlsafe_base64_encode(force_bytes(new_consultant.pk)))
 
 
 class RecalculationTest(TestCase):
@@ -829,7 +834,7 @@ class ResponseAdminTests(TestCase):
         """there should be a ResponseAdmin obj for the model Response in admin_site.url"""
         response_admin = admin_site._registry.get(Response)
         self.assertIsNotNone(response_admin)
-        self.assertEquals(response_admin.__class__, ResponseAdmin)
+        self.assertEqual(response_admin.__class__, ResponseAdmin)
 
     def test_user_link_method_when_user_is_none(self):
         """return empty string"""
@@ -840,7 +845,7 @@ class ResponseAdminTests(TestCase):
         user.save()
         response = Response.objects.get(pk=response.pk)  # refetching since assessment's user has been altered
         expected = 'User has been deleted'
-        self.assertEquals(expected, self.response_admin.user_link(response))
+        self.assertEqual(expected, self.response_admin.user_link(response))
 
     def test_user_link_method_when_score_is_not_none(self):
         """return link to user"""
@@ -849,7 +854,7 @@ class ResponseAdminTests(TestCase):
         response = create_response(assessment)
         expected = mark_safe(
             '<a href="{}">{}</a>'.format(reverse("admin:core_user_change", kwargs=(dict(object_id=user.pk))), user))
-        self.assertEquals(expected, self.response_admin.user_link(response))
+        self.assertEqual(expected, self.response_admin.user_link(response))
 
 
 class ViewOnlyAdminTests(TestCase):
@@ -878,7 +883,7 @@ class ViewOnlyAdminTests(TestCase):
         """there should be a View_Only_Admin obj for the model View_Only_Admins in admin_site.url"""
         view_Only_Admin = admin_site._registry.get(ViewOnlyAdmin)
         self.assertIsNotNone(view_Only_Admin)
-        self.assertEquals(view_Only_Admin.__class__, ViewOnlyAdminAdmin)
+        self.assertEqual(view_Only_Admin.__class__, ViewOnlyAdminAdmin)
 
     def test_View_Only_Admin_view_assessment_perm(self):
         # View_Only_Admins should have permission to view assessments
@@ -894,17 +899,17 @@ class ViewOnlyAdminTests(TestCase):
 
         self.assertRedirects(response, reverse('admin:core_view_only_admin_changelist'))
 
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         sent_email = mail.outbox[-1]
-        self.assertEquals(len(sent_email.to), 1)
-        self.assertEquals(sent_email.to[0], voa_email)
+        self.assertEqual(len(sent_email.to), 1)
+        self.assertEqual(sent_email.to[0], voa_email)
 
         verify_registration_completion_link_url_pattern = r'http://testserver(?P<verify_registration_completion_link_url>/[\S]+)'
         m = re.search(verify_registration_completion_link_url_pattern, sent_email.body)
         self.assertIsNotNone(m)
         resolver = get_resolver()
         resolver_match = resolver.resolve(m.group('verify_registration_completion_link_url'))
-        self.assertEquals(resolver_match.view_name, 'admin:core_view_only_admin_verify_registration_completion_link')
+        self.assertEqual(resolver_match.view_name, 'admin:core_view_only_admin_verify_registration_completion_link')
         new_view_only_admin = ViewOnlyAdmin.objects.get(email=voa_email)
-        self.assertEquals(resolver_match.kwargs['token'], default_token_generator.make_token(new_view_only_admin))
-        self.assertEquals(resolver_match.kwargs['uidb64'], urlsafe_base64_encode(force_bytes(new_view_only_admin.pk)))
+        self.assertTrue(default_token_generator.check_token(new_view_only_admin, resolver_match.kwargs['token']))
+        self.assertEqual(resolver_match.kwargs['uidb64'], urlsafe_base64_encode(force_bytes(new_view_only_admin.pk)))

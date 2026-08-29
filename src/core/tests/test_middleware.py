@@ -14,22 +14,22 @@ from core.tests.utils import *
 class RequiredDataMiddlewareTest(TestCase):
     def test_no_questions_in_db_for_core_url(self):
         """ Throw AssertionError of Questions not loaded """
-        self.assertEquals(Question.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), 0)
         with self.assertRaisesMessage(AssertionError, QUESTIONS_MISSING_FROM_DB_ERROR_MESSAGE):
             response = self.client.get(reverse('core:index'))
 
     def test_no_questions_in_db_for_non_core_url(self):
         """ Successfully access the page """
-        self.assertEquals(Question.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), 0)
         response = self.client.get(reverse('admin:login'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_question_in_db_for_core_url(self):
         """ Successfully access the page """
         create_question()
         self.assertGreater(Question.objects.count(), 0)
         response = self.client.get(reverse('core:index'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 
@@ -40,7 +40,7 @@ class PermissionMiddlewareTest(TestCase):
         self.client = Client()
 
     def test_user_is_not_registered_public_page(self):
-        self.assertEquals(self.client.get('/').status_code, 200)
+        self.assertEqual(self.client.get('/').status_code, 200)
 
     def test_user_is_not_registered_private_page(self):
         """Redirect to register"""
@@ -54,7 +54,7 @@ class PermissionMiddlewareTest(TestCase):
         session['user_id'] = user.pk
         session.save()
         path = reverse('core:choose_access_type', kwargs=dict(user_id=user.pk))
-        self.assertEquals(self.client.get(path, follow=False).status_code, 200)
+        self.assertEqual(self.client.get(path, follow=False).status_code, 200)
 
     def test_wrong_user(self):
         """Redirect to continue with error message"""
@@ -66,7 +66,7 @@ class PermissionMiddlewareTest(TestCase):
         response = self.client.get(reverse('core:choose_access_type', kwargs=kwargs), follow=True)
         self.assertGreater(len(response.redirect_chain), 0)
         expected_url = reverse('core:continue')
-        self.assertEquals(response.redirect_chain[0], (expected_url, 302))  # check if redirects to continue first,
+        self.assertEqual(response.redirect_chain[0], (expected_url, 302))  # check if redirects to continue first,
         # more explanation in docs: https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.Client.get
         messages = list(response.context.get('messages'))
         expected_message = Message(level=ERROR, message=MISSING_PERMISSION_ERROR_MESSAGE)
@@ -104,7 +104,7 @@ class PermissionMiddlewareTest(TestCase):
         session['assessment_id'] = assessment.pk
         session.save()
         path = reverse('core:demographics', kwargs=dict(user_id=user.pk, assessment_id=assessment.pk))
-        self.assertEquals(self.client.get(path, follow=False).status_code, 200)
+        self.assertEqual(self.client.get(path, follow=False).status_code, 200)
 
     def test_user_with_assessment_id_accessing_assessment_urls_with_different_assessment_id(self):
         """Redirect to continue with error message"""
@@ -119,7 +119,7 @@ class PermissionMiddlewareTest(TestCase):
         response = self.client.get(reverse('core:demographics', kwargs=kwargs), follow=True)
         self.assertGreater(len(response.redirect_chain), 0)
         expected_url = reverse('core:continue')
-        self.assertEquals(response.redirect_chain[0], (expected_url, 302))  # check if redirects to continue first,
+        self.assertEqual(response.redirect_chain[0], (expected_url, 302))  # check if redirects to continue first,
         # more explanation in docs: https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.Client.get
         messages = list(response.context.get('messages'))
         expected_message = Message(level=ERROR, message=MISSING_PERMISSION_ERROR_MESSAGE)

@@ -135,7 +135,7 @@ class PDFEmailTests(TestCase):
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
         email = mail.outbox[0]
-        self.assertEquals(email.to[0], self.user.email)
+        self.assertEqual(email.to[0], self.user.email)
         mock_save.assert_called_once()  # No file saved!
 
     @patch('django.core.files.storage.FileSystemStorage.save')
@@ -151,7 +151,7 @@ class PDFEmailTests(TestCase):
         response = self.client.get(
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         mock_save.assert_called_once()  # No file saved!
 
     @patch('django.core.files.storage.FileSystemStorage.save')
@@ -168,7 +168,7 @@ class PDFEmailTests(TestCase):
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
         email = mail.outbox[0]
-        self.assertEquals(
+        self.assertEqual(
             email.attachments[0][0],
             f'test@email.com_{self.assessment.pk}_results.pdf'
         )
@@ -188,7 +188,7 @@ class PDFEmailTests(TestCase):
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
         email = mail.outbox[0]
-        self.assertEquals(email.bcc[0], settings.BCC_EMAIL)
+        self.assertEqual(email.bcc[0], settings.BCC_EMAIL)
         mock_save.assert_called_once()  # No file saved!
 
     @patch('django.core.files.storage.FileSystemStorage.save')
@@ -205,7 +205,7 @@ class PDFEmailTests(TestCase):
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
         email = mail.outbox[0]
-        self.assertEquals(email.subject, "PDA Results")
+        self.assertEqual(email.subject, "PDA Results")
         mock_save.assert_called_once()  # No file saved!
 
     @patch('django.core.files.storage.FileSystemStorage.save')
@@ -236,30 +236,30 @@ class RegistrationViewTests(TestCase):
     def test_email_already_exists(self):
         """A new unverified user is not created and error gets thrown"""
         user = create_user()
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user.email)), 0)
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user.email)), 0)
         post_body = dict(user.__dict__)
         response = self.client.post(reverse('core:register'), post_body, follow=True)
         self.assertRedirects(response, reverse('core:register'))
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user.email)), 0)
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user.email)), 0)
         messages = list(response.context.get('messages'))
-        self.assertEquals(len(messages), 1)
+        self.assertEqual(len(messages), 1)
         message = messages[0]
-        self.assertEquals(message.tags, DEFAULT_TAGS.get(ERROR))
-        self.assertEquals(message.message, USER_ALREADY_EXISTS_MESSAGE)
+        self.assertEqual(message.tags, DEFAULT_TAGS.get(ERROR))
+        self.assertEqual(message.message, USER_ALREADY_EXISTS_MESSAGE)
 
     def test_valid_form(self):
         """Create unverified user, send email with correct token, and show verification instruction"""
         user_dict = USER_DICT
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user_dict['email'])), 0)
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user_dict['email'])), 0)
 
         response = self.client.post(reverse('core:register'), user_dict, follow=True)
         self.assertRedirects(response, reverse('core:verify_email_instructions'))
         # check if email is sent
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
-        self.assertEquals(email.subject, VERIFICATION_EMAIL_SUBJECT)
+        self.assertEqual(email.subject, VERIFICATION_EMAIL_SUBJECT)
         # check if email contains correct verification link
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user_dict['email'])), 1)
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user_dict['email'])), 1)
         unverified_user = UnverifiedUser.objects.get(email=user_dict['email'])
         token = token_generator_for_abstract_user.make_token(unverified_user)
         uidb64 = urlsafe_base64_encode(force_bytes(unverified_user.pk))
@@ -295,9 +295,9 @@ class RetakeViewTests(TestCase):
         user = create_user(user_dict)
         response = self.client.post(reverse('core:retake'), data=dict(email=user.email), follow=True)
         self.assertRedirects(response, reverse('core:verify_email_instructions'))
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
-        self.assertEquals(email.subject, RE_VERIFICATION_EMAIL_SUBJECT)
+        self.assertEqual(email.subject, RE_VERIFICATION_EMAIL_SUBJECT)
         token = token_generator_for_abstract_user.make_token(user)
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         domain = self.client._base_environ()['SERVER_NAME']
@@ -332,11 +332,11 @@ class EmailVerificationViewTests(TestCase):
         token = token_generator_for_abstract_user.make_token(unverified_user)
         uidb64 = urlsafe_base64_encode(force_bytes(unverified_user.pk))
         user = create_user(user_dict)  # using same email as unverified_user
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user.email)),
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user.email)),
                           1)
         response = self.client.get(reverse('core:verify_email', kwargs=dict(uidb64=uidb64, token=token)), follow=True)
         self.assertRedirects(response, reverse('core:register'))
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=user.email)),
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=user.email)),
                           0)  # checking if all the unverified_user s get deleted
         messages = list(response.context.get('messages'))
         expected_message = Message(level=ERROR, message=USER_ALREADY_EXISTS_MESSAGE)
@@ -346,7 +346,7 @@ class EmailVerificationViewTests(TestCase):
         """Redirect to choose_access_type, and delete all unverified user with same email"""
         unverified_user = create_unverified_user()
         create_unverified_user()  # second unverified user with same email
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=unverified_user.email)), 2)
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=unverified_user.email)), 2)
         token = token_generator_for_abstract_user.make_token(unverified_user)
         uidb64 = urlsafe_base64_encode(force_bytes(unverified_user.pk))
         response = self.client.get(reverse('core:verify_email', kwargs=dict(uidb64=uidb64, token=token)), follow=True)
@@ -354,7 +354,7 @@ class EmailVerificationViewTests(TestCase):
         self.assertIsNotNone(user_id)
         self.assertRedirects(response,
                              reverse('core:choose_access_type', kwargs=dict(user_id=user_id)))
-        self.assertEquals(len(UnverifiedUser.objects.filter(email=unverified_user.email)),
+        self.assertEqual(len(UnverifiedUser.objects.filter(email=unverified_user.email)),
                           0)  # checking all other users are deleted
 
 
@@ -402,7 +402,7 @@ class ChooseAccessTypeTest(TestCase):
         Test whether page returns 200
         """
         response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Choose an access type')
 
     def test_corrected_paid_text(self):
@@ -410,7 +410,7 @@ class ChooseAccessTypeTest(TestCase):
         Test whether page returns 200
         """
         response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'If you want to take the PDA and receive an hour-long results consultation')
 
     # def test_corrected_free_text(self):
@@ -418,7 +418,7 @@ class ChooseAccessTypeTest(TestCase):
     #     Test whether page returns 200
     #     """
     #     response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
-    #     self.assertEquals(response.status_code, 200)
+    #     self.assertEqual(response.status_code, 200)
     #     self.assertContains(response, 'By choosing this free option, you can receive results and schedule a 10 ')
 
 
@@ -447,10 +447,10 @@ class VerifyAccessTokenTest(TestCase):
         response = self.client.post(reverse('core:verify_access_code', kwargs=dict(user_id=self.user.pk)),
                                     {'access_code': self.code}, follow=False)
         access_code = AccessCode.objects.get(code=self.code)
-        self.assertEquals(access_code.uses_left, self.uses_left - 1)
+        self.assertEqual(access_code.uses_left, self.uses_left - 1)
         access_type = self.client.session.get('access_type')
         self.assertIsNotNone(access_type)
-        self.assertEquals(access_type, ACCESS_TYPE_INST)
+        self.assertEqual(access_type, ACCESS_TYPE_INST)
         expected_url = reverse('core:create_assessment', kwargs=dict(user_id=self.user.pk))
         self.assertRedirects(response, expected_url, target_status_code=302)
 
@@ -506,7 +506,7 @@ class VerifyAccessTokenTest(TestCase):
         self.assertRedirects(response, reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
         self.assertFalse('access_type' in self.client.session)
         access_code = AccessCode.objects.get(code=self.code)
-        self.assertEquals(access_code.uses_left, self.uses_left)
+        self.assertEqual(access_code.uses_left, self.uses_left)
 
     def test_no_uses_left(self):
         """Redirect to choose_access_type without setting session key"""
@@ -532,8 +532,8 @@ class VerifyAccessTokenTest(TestCase):
                                , kwargs=dict(user_id=self.user.pk))
         self.assertRedirects(response, expected_url, target_status_code=302)
         access_code = AccessCode.objects.get(code=self.code)
-        self.assertEquals(access_code.uses_left, -1)
-        self.assertEquals(self.client.session['access_type'], ACCESS_TYPE_INST)
+        self.assertEqual(access_code.uses_left, -1)
+        self.assertEqual(self.client.session['access_type'], ACCESS_TYPE_INST)
 
 
 # PayPal payment tests
@@ -548,7 +548,7 @@ class PayTest(TestCase):
     # PayPal button shows up
     def test_BuyNow_button(self):
         response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'input type="hidden" name="cmd"')
 
     # CANCELLATION TESTS
@@ -774,7 +774,7 @@ class DemographicTests(TestCase):
         self.assertRedirects(response, expected_url)
         demographic = Assessment.objects.get(pk=self.assessment.pk).demographic
         self.assertIsNotNone(demographic)
-        self.assertEquals(demographic.gender, 'Male')
+        self.assertEqual(demographic.gender, 'Male')
 
     # making sure a demographic form with bad data would get rejected
     def test_demo_form_bad(self):
@@ -945,8 +945,8 @@ class QuestionResponseTests(TestCase):
                     kwargs={'user_id': self.user.pk, 'assessment_id': self.assessment.pk, 'number': 1}), dict_data,
             follow=True)
 
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(Response.objects.get(question_number="1").sociocultural_location, 'test')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Response.objects.get(question_number="1").sociocultural_location, 'test')
 
     # making sure a response form with bad data would get rejected with error message
     def test_response_form_bad(self):
@@ -993,9 +993,9 @@ class QuestionResponseTests(TestCase):
         body = dict(response='strongly agree')
         kwargs = dict(user_id=self.user.pk, assessment_id=self.assessment.pk, number=question.number)
         response = self.client.post(reverse('core:question_submit', kwargs=kwargs), body, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = Response.objects.get(question_number=question.number, assessment_id=self.assessment.pk)
-        self.assertEquals(response.power_perspective, question.secondary_power_perspective)
+        self.assertEqual(response.power_perspective, question.secondary_power_perspective)
 
     def test_secondary_demographic_choice_different_from_assessment_demographic_choice(self):
         """
@@ -1013,9 +1013,9 @@ class QuestionResponseTests(TestCase):
         body = dict(response='strongly agree')
         kwargs = dict(user_id=self.user.pk, assessment_id=self.assessment.pk, number=question.number)
         response = self.client.post(reverse('core:question_submit', kwargs=kwargs), body, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = Response.objects.get(question_number=question.number, assessment_id=self.assessment.pk)
-        self.assertEquals(response.power_perspective, question.primary_power_perspective)
+        self.assertEqual(response.power_perspective, question.primary_power_perspective)
 
 
 #
@@ -1403,7 +1403,7 @@ class ClearSessionViewTest(TestCase):
 
         response = self.client.get(reverse('core:clear_session'))
         items_after_visiting = self.client.session.items()
-        self.assertEquals(items_before_visiting, items_after_visiting)
+        self.assertEqual(items_before_visiting, items_after_visiting)
         self.assertRedirects(response, reverse('core:continue'), target_status_code=302)
 
     def test_is_finished_session_key_present(self):
@@ -1453,7 +1453,7 @@ class PDFTest(TestCase):
     #     response = self.client.get(
     #         reverse('core:pdf_results', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
     #         follow=True)
-    #     self.assertEquals(response.get("Content-Disposition"),
+    #     self.assertEqual(response.get("Content-Disposition"),
     #                       'attachment; filename="tj3va@virginia.edu_1_results.pdf"')
 
     # tests that response has successful status code (200)
@@ -1596,7 +1596,7 @@ class CustomErrorHandlerTest(TestCase):
             response = custom_server_error(request)  # TODO: Find better way to test
             self.assertContains(response, 'something went wrong', status_code=500)
         self.assertEqual(len(cm.records), 1, "Wrong number of calls for logger %r in %r level." % (logger, level))
-        self.assertEquals(cm.output, [f'ERROR:{logger_name}:{INTERNAL_SERVER_ERROR_LOG_MESSAGE}'])
+        self.assertEqual(cm.output, [f'ERROR:{logger_name}:{INTERNAL_SERVER_ERROR_LOG_MESSAGE}'])
 
 
 class CompleteConsultantRegistrationViewTest(TestCase):
@@ -1634,7 +1634,7 @@ class CompleteConsultantRegistrationViewTest(TestCase):
         self.client.force_login(consultant)
         response = self.client.get(
             reverse('admin:core_consultant_complete_registration', kwargs=dict(consultant_pk=consultant.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_valid_post_request(self):
         """Successfully update consultant"""
@@ -1650,7 +1650,7 @@ class CompleteConsultantRegistrationViewTest(TestCase):
             reverse('admin:core_consultant_complete_registration', kwargs=dict(consultant_pk=consultant.pk)), data=data)
         updated_consultant = Consultant.objects.get(pk=consultant.pk)
 
-        self.assertEquals(updated_consultant.username, updated_username)
+        self.assertEqual(updated_consultant.username, updated_username)
 
 
 class VerifyCompleteConsultantRegistrationLinkViewTest(TestCase):
@@ -1722,7 +1722,7 @@ class CompleteViewOnlyAdminRegistrationViewTest(TestCase):
         response = self.client.get(
             reverse('admin:core_view_only_admin_complete_registration',
                     kwargs=dict(view_only_admin_pk=view_only_admin.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class VerifyCompleteViewOnlyAdminRegistrationLinkViewTest(TestCase):
@@ -1764,7 +1764,7 @@ class CustomPasswordResetViewsTests(TestCase):
     def test_valid_get_request(self):
         """Successfully retrieves page"""
         response = self.client.get(reverse('admin_password_reset'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset my password')
 
 
@@ -1778,7 +1778,7 @@ class CustomPasswordResetRelatedViewsTests(TestCase):
     def test_get_password_reset_page(self):
         """Successfully render page"""
         response = self.client.get(reverse('admin_password_reset'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset my password')
 
     def test_valid_password_reset_request(self):
@@ -1794,14 +1794,14 @@ class CustomPasswordResetRelatedViewsTests(TestCase):
         # send a password reset request
         response = self.client.post(reverse('admin_password_reset'), data=dict(email=user.email))
         self.assertRedirects(response, reverse('password_reset_done'))
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         urlmatch = re.search(r"https?://[^/]*(/.*reset/\S*)", mail.outbox[0].body)
         self.assertIsNotNone(urlmatch, "No URL found in sent email")
 
         # follow reset url to go to set new password page
         path = urlmatch.groups()[0]
         response = self.client.get(path)
-        self.assertEquals(response.resolver_match.view_name, 'password_reset_confirm')
+        self.assertEqual(response.resolver_match.view_name, 'password_reset_confirm')
 
         # post new password
         path = response.url
@@ -1833,7 +1833,7 @@ class AssessmentDetailedViewTest(TestCase):
         """Returns assessment"""
         assessment = create_assessment(user=create_user())
         view = AssessmentDetailedView(kwargs=dict(assessment_pk=assessment.pk))
-        self.assertEquals(view.get_permission_object(), assessment)
+        self.assertEqual(view.get_permission_object(), assessment)
 
     def test_staticmethod_sort_responses_by_response_choice(self):
         """Should return responses sorted by their response choice score"""
@@ -1860,7 +1860,7 @@ class AssessmentDetailedViewTest(TestCase):
                     response_with_score_3,
                     response_with_score_4, ]
         actual = AssessmentDetailedView.sort_responses_by_response_choice(responses)
-        self.assertEquals(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_staticmethod_get_pdf_link_when_PDF_exists(self):
         """Return value includes PDF file path"""
@@ -1873,12 +1873,12 @@ class AssessmentDetailedViewTest(TestCase):
     def test_staticmethod_get_pdf_link_when_PDF_does_not_exist(self):
         """Return no report available"""
         assessment = create_assessment()
-        self.assertEquals("No report available", AssessmentDetailedView.get_pdf_link_for_assessment(assessment))
+        self.assertEqual("No report available", AssessmentDetailedView.get_pdf_link_for_assessment(assessment))
 
     def test_staticmethod_get_consultants_for_assessment_when_no_consultants(self):
         """Should return No consultants assigned"""
         assessment = create_assessment()
-        self.assertEquals("No consultants assigned", AssessmentDetailedView.get_consultants_for_assessment(assessment))
+        self.assertEqual("No consultants assigned", AssessmentDetailedView.get_consultants_for_assessment(assessment))
 
     def test_staticmethod_get_consultants_for_assessment(self):
         """Should return comma seperated list of consultants"""
@@ -1891,7 +1891,7 @@ class AssessmentDetailedViewTest(TestCase):
              'email': "consultant2@email.com"})
         assessment.consultants.add(consultant_1, consultant_2)
         assessment.save()
-        self.assertEquals("consultant one (consultant1@email.com), consultant two (consultant2@email.com)",
+        self.assertEqual("consultant one (consultant1@email.com), consultant two (consultant2@email.com)",
                           AssessmentDetailedView.get_consultants_for_assessment(assessment))
 
     def test_response_when_user_is_none(self):
@@ -1911,7 +1911,7 @@ class AssessmentDetailedViewTest(TestCase):
         assert len(Demographic.objects.filter(assessment=assessment)) == 0  # sanity check
         response = self.client.get(
             reverse('admin:core_assessment_detailed_view', kwargs=dict(assessment_pk=assessment.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Assessment %s Details" % assessment.pk)
         self.assertContains(response, "No demographic information available")
 
@@ -1935,5 +1935,5 @@ class AssessmentDetailedViewTest(TestCase):
                                                                   })
         response = self.client.get(
             reverse('admin:core_assessment_detailed_view', kwargs=dict(assessment_pk=assessment.pk)))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Assessment %s Details" % assessment.pk)

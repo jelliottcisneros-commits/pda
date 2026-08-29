@@ -18,7 +18,7 @@ def generate_vbar(x, top, title):
     from bokeh.plotting import figure
 
     source = ColumnDataSource(data=dict(x=x, y=top))
-    p = figure(x_range=FactorRange(factors=x), plot_height=250, title=title, 
+    p = figure(x_range=FactorRange(factors=x), height=250, title=title, 
                 toolbar_location=None, tools="hover", tooltips="@x: @y")
     p.vbar(x='x', top='y', width=.9, source=source)
     p.sizing_mode = "scale_both"
@@ -32,7 +32,7 @@ def generate_vbar_stack(x, top, title, demographic_number):
 
     demo_choices = [demographic_choice[0] for demographic_choice in DemographicsVisualizationView.demographic_choices[demographic_number]] 
     colors = get_color_palette(len(demo_choices))
-    p = figure(x_range=FactorRange(factors=x), plot_height=250, title=title, 
+    p = figure(x_range=FactorRange(factors=x), height=250, title=title, 
                 toolbar_location=None, tools="hover", tooltips="$name: @$name")
     v = p.vbar_stack(demo_choices, x='x', width=0.9, color=colors, source=ColumnDataSource(top))
     p.xaxis.major_label_orientation = .5
@@ -45,7 +45,7 @@ def get_color_palette(number_of_colors):
     from bokeh.palettes import d3, inferno
 
     if number_of_colors < 3:
-        colors = d3['Category20'][3]
+        colors = list(d3['Category20'][3])
         while number_of_colors < len(colors):
             colors.pop(0)
     elif number_of_colors > 20:

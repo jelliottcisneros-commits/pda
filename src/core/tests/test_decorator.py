@@ -28,8 +28,8 @@ class RequireSessionKeyAbsenceDecoratorTests(TestCase):
         response = test_view(request)
 
         expected_url = reverse('core:continue')
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response.url, expected_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, expected_url)
         expected_message = Message(level=ERROR, message=CANNOT_MOVE_BACKWARDS_MESSAGE)
         messages = list(get_messages(request))
         self.assertIn(expected_message, messages)
@@ -67,8 +67,8 @@ class ValidLastQuestionRequiredDecoratorTests(TestCase):
         response = test_view(request, user_id=user_id, assessment_id=assessment_id)
 
         expected_url = reverse('core:demographics', kwargs=dict(user_id=user_id, assessment_id=assessment_id))
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response.url, expected_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, expected_url)
 
     def test_last_question_is_negative(self):
         """Raise AssertionError"""
@@ -119,7 +119,7 @@ class ValidLastQuestionRequiredDecoratorTests(TestCase):
 
         response = test_view(request, user_id=0, assessment_id=0)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Success')
 
 
@@ -144,8 +144,8 @@ class IncompleteAssessmentRequiredDecoratorTests(TestCase):
         response = test_view(request, user_id=user_id, assessment_id=assessment_id)
 
         expected_url = reverse('core:score', kwargs=dict(user_id=user_id, assessment_id=assessment_id))
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response.url, expected_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, expected_url)
 
     def test_assessment_is_incomplete(self):
         """Call wrapped function"""
@@ -167,7 +167,7 @@ class IncompleteAssessmentRequiredDecoratorTests(TestCase):
 
         response = test_view(request, user_id=user_id, assessment_id=assessment_id)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Success')
 
 
@@ -194,8 +194,8 @@ class AssessmentCompletionRequiredDecoratorTests(TestCase):
 
         expected_url = reverse('core:question',
                                kwargs=dict(user_id=user_id, assessment_id=assessment_id, number=last_question + 1))
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response.url, expected_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, expected_url)
 
     def test_assessment_is_complete(self):
         """Call wrapped function"""
@@ -216,5 +216,5 @@ class AssessmentCompletionRequiredDecoratorTests(TestCase):
 
         response = test_view(request, user_id=user_id, assessment_id=assessment_id)
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Success')

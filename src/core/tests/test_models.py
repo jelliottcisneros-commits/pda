@@ -56,7 +56,7 @@ class QuestionModelTest(TestCase):
                             secondary_power_perspective="Appreciation")
         with self.assertRaises(ValidationError) as cm:
             question.clean()
-        self.assertEquals(cm.exception.code, 'empty')
+        self.assertEqual(cm.exception.code, 'empty')
 
     def test_clean_method_when_invalid_demographic_type(self):
         """Raise validation error invalid"""
@@ -69,7 +69,7 @@ class QuestionModelTest(TestCase):
                             secondary_demographic_choice='not a valid choice')
         with self.assertRaises(ValidationError) as cm:
             question.clean()
-        self.assertEquals(cm.exception.code, 'invalid')
+        self.assertEqual(cm.exception.code, 'invalid')
 
     def test_clean_method_when_valid_demographic_type_but_invalid_demographic_choice(self):
         """Raise validation error invalid"""
@@ -82,7 +82,7 @@ class QuestionModelTest(TestCase):
                             secondary_demographic_choice='not a valid choice')
         with self.assertRaises(ValidationError) as cm:
             question.clean()
-        self.assertEquals(cm.exception.code, 'invalid')
+        self.assertEqual(cm.exception.code, 'invalid')
 
     def test_clean_method_when_valid_demographic_type_and_choice(self):
         """Raise no error"""
