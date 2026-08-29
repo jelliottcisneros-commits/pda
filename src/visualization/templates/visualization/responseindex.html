@@ -1,0 +1,30 @@
+{% extends 'visualization/base.html' %}
+{% load static %}
+{% block title %}Response Visualizations{% endblock %}
+{% block scripts %}
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+    {{ script | safe }}
+{% endblock %}
+{% block content %}
+    <body>
+
+    <div class="container">
+        <div class="row p-3">
+            <div class="col">
+                <h1 role="heading">Response Index</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        {% for question in questions %}
+            <a href="{% url 'visualization:responses' question_number=question.number demographic_number=none_value %}" role="link">{{question.number}}. {{question.title}}</a><br>
+        {% endfor %}
+        <br>
+    </div>
+
+
+    </body>
+
+
+{% endblock %}

@@ -1,0 +1,12 @@
+@media (min-width: 991.98px) {
+    .container {
+
+        height: 60vh; /*TODO (nn3un): Fix this*/
+        position: relative;
+        top: 20%;
+    }
+
+    .heading {
+        margin-bottom: 3rem;
+    }
+}

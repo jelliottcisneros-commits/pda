@@ -1,0 +1,57 @@
+{% extends 'visualization/base.html' %}
+{% load static %}
+{% block title %}Score Visualizations{% endblock %}
+{% block scripts %}
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+    {{ script | safe }}
+{% endblock %}
+{% block content %}
+    <body>
+
+    <div class="container">
+        <div class="row p-3">
+            <div class="col">
+                <h1 role="heading">Scores</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form action="" method="post">{% csrf_token %} 
+            <div class="row justify-content-start align-items-bottom p-3">
+                <div class="col-auto">
+                    <select class="custom-select" name="score_type">
+                    {% for type in score_types %}
+                        <option value="{{type}}" id="{{score_type}}"
+                            {% if type == score_type_prev %} selected="selected" {% endif %}>
+                            {{type}}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="custom-select" name="demographic_number">
+                        <option value="{{none_value}}"  id="{{none_value}}" selected="selected" > None </option>
+                        {% for i in demographic_labels %}
+                            <option value="{{forloop.counter0}}"  id="{{forloop.counter}}" 
+                            {% if forloop.counter0 == demographic_number %} selected="selected" {% endif %}>
+                            {{i}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Go">
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="container pb-5">
+        <div class = "row p-3">
+            {{ div | safe }}
+        </div>
+    </div>
+    
+    </body>
+    {% endblock %}

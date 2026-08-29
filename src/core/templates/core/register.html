@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load core_extras %}
+{% load static %}
+{% block content %}
+<head>
+    <title>Power of Difference Assessment - Registration</title>
+</head>
+    <link rel="stylesheet" href="{% static 'core/css/register.css' %}">
+    <div class="container p-4" role="main">
+        <form class="col-md-6 mx-auto bg-light p-5 rounded-lg" role="form" method="POST" action="{% url 'core:register' %}">
+            {% csrf_token %}
+            <h1 class="text-center pb-2" role="heading" >Register Here</h1>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field|add_class_to_form_field:'form-control' }}
+                    {% for error in field.errors %}
+                        <p class="small text-danger">{{ error }}</p>
+                    {% endfor %}
+                    <p class="small">
+                        {% if field.help_text %}
+                            {{ field.help_text }}
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary btn-block" role="button" autofocus="true">Register</button>
+        </form>
+    <div class="col-md-6 mx-auto text-center font-italic" role="complementary" >
+        If the admin has granted you permission to retake the assessment, <a href="{% url 'core:retake' %}" role="link">please
+        click here to reverify</a>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+    <script>
+        // disallow user to hit browser's back button
+        // source: https://stackoverflow.com/a/34337617/10161232
+        history.pushState(null, document.title, location.href);
+        window.addEventListener('popstate', function (event) {
+            history.pushState(null, document.title, location.href);
+        });
+
+        // enable/disable navigation buttons if response not chosen
+        function enableButton() {
+            {% if not is_last_question %}
+                document.getElementById("next_button").disabled = false;
+            {% else %}
+                document.getElementById("submit_button").disabled = false;
+            {% endif %}
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'core/css/question.css' %}">
+    <head>
+        <title>Power of Difference Assessment - Statement {{ question.number }}</title>
+    </head>
+
+    <div class="container" role="main">
+        <div class="card my-5">
+            <h2 class="card-header font-italic" role="heading">
+                {{ question.sociocultural_location }}
+            </h2>
+            <div class="card-body">
+                <h2 class="card-title">Statement {{ question.number }}</h2>
+                <h5 class="card-title">{{ question.title }}</h5>
+                <form class="card-text col-md-12 mx-auto bg-white p-4 rounded-lg" role="form" method="POST"
+                      action="{% url 'core:question_submit' user_id=user_id assessment_id=assessment_id number=question.number %}">
+                    {% csrf_token %}
+                    <div class="form-group" role="radiogroup">
+                        {% for radio in form.response %}
+                            {{ radio.tag }}
+                            <label for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                            <br>
+                        {% endfor %}
+                    </div>
+                    {% if not is_last_question %}
+                        <button class="btn btn-primary" id="next_button" role="button" disabled>
+                            Next
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary" id="submit_button" role="button" disabled>
+                            Submit
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

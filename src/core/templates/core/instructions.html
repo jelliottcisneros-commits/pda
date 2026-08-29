@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+    <script>
+        // disallow user to hit browser's back button
+        // source: https://stackoverflow.com/a/34337617/10161232
+        history.pushState(null, document.title, location.href);
+        window.addEventListener('popstate', function (event) {
+            history.pushState(null, document.title, location.href);
+        });
+    </script>
+    <head>
+        <title>Power of Difference Assessment - Instructions</title>
+    </head>
+    <div class="container" role="main">
+        <h1 role="heading" class="text-center">
+                Instructions
+        </h1>
+
+        <p>
+            <b>DIRECTIONS:</b> For each numbered item below, place the letter (a, b, c, d, e) that best matches your
+            level of
+            agreement. Answer as honestly as possible. If you answer what you think you "should" or what is the "right
+            answer"
+            rather than simply identifying what most closely represents your experience, the usefulness of the
+            assessment is
+            minimized.
+        </p>
+
+        <p>
+            <b>NOTES:</b>
+            <br>
+        <ul>
+            <li>
+                The language utilized intentionally represents a spectrum of actual perspectives of particular
+                sociocultural
+                locations and worldviews—it is expected, therefore, that some statements will feel uncomfortable or
+                their
+                wording may appear to be flawed or confusing.
+            </li>
+            <li>
+                All personal or organizational results will be kept strictly confidential except where permission is
+                granted for
+                data to be integrated (without associated names) for the development of a group profile.
+            </li>
+            <li>
+                LGBQ+ = Lesbian, Gay, Bi-Sexual, Queer and/or Questioning--the "+" represents other identities:
+                pansexual,
+                androgynous, asexual, demisexual.
+            </li>
+        </ul>
+        <b>RESPONSE OPTIONS:</b>
+        <ol type="a">
+            <li>Strongly agree</li>
+            <li>Agree more than disagree</li>
+            <li>Agree and disagree about the same</li>
+            <li>Disagree more than agree</li>
+            <li>Strongly disagree</li>
+        </ol>
+        <a href="{% url 'core:question' user_id=user_id assessment_id=assessment_id number=1 %}"
+           class="btn btn-primary btn-block" role="button" style="width:20%">Start</a>
+    </div>
+{% endblock %}

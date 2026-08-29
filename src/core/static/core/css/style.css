@@ -1,0 +1,24 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #ececec;
+    box-shadow: 0 8px 6px 6px black;
+    font-size: 14px;
+}
+
+@media only screen and (max-width: 762px) {
+    #footer {
+        font-size: 12px;
+    }
+}
+
+#footer-img {
+    width: 40px;
+    height: 40px;
+}

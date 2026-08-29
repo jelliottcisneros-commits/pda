@@ -1,0 +1,20 @@
+{% load i18n %}
+{% autoescape off %}
+
+Hello new consultant,
+
+Congratulations! A consultant account has been created for you at {{ site_name }}.
+You must immediately RESET YOUR PASSWORD and fill out other relevant information by visiting the following link:
+
+{{ protocol }}://{{ domain }}{% url 'admin:core_consultant_verify_registration_completion_link' uidb64=uid token=token %}
+
+Kind Regards,
+J. Elliott Cisneros
+Executive Director/Founder
+434.260.9377
+Study Center: 914 E. Jefferson St, Suite G4
+PO Box 2754, Charlottesville, Virginia, 22902
+www.thesum.org
+info@thesum.org
+
+{% endautoescape %}

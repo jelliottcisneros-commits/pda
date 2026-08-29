@@ -1,0 +1,20 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$d2AyrPfvCwCa$FO7SUxGQhLyRPkngXZxgk1vQLLaK6DXHwxUqx8lZuaM=",
+        "last_login": "2019-11-02T00:20:39.985Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "powerofdifferencetest@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-10-11T21:32:54.751Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

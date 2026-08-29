@@ -1,0 +1,14 @@
+{% autoescape off %}
+Hi {{ abstract_user.first_name }},
+
+Thank you for signing up to take the Power of Difference Assessment. To continue, please click the link below.
+{{ protocol }}://{{ domain }}{% url 'core:verify_email' uidb64=uid token=token %}
+
+NOTE: Once you click the link and start the assessment, you must finish it within an hour. You will not be able to change devices while you are taking the assessment.
+
+We hope you find the PDA meaningful and helpful,
+TheSum
+Charlottesville, VA
+www.thesum.org
+Please send any replies to info@thesum.org
+{% endautoescape %}

@@ -1,0 +1,45 @@
+{% extends 'visualization/base.html' %}
+{% load static %}
+{% block title %}Demographics Visualizations{% endblock %}
+{% block scripts %}
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+    {{ script | safe }}
+{% endblock %}
+{% block content %}
+    <head>
+        <title>Demographic Visualizations</title>
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+        {% for script in scripts %}
+            {{ script | safe }}
+        {% endfor %}
+    </head>
+
+    <body>
+    <div class="container p-4" role="main">
+        <div class="row p-3">
+            <div class="col">
+                <h1 role="heading">Demographics</h1>
+                <br>
+                <form action="" method="post">{% csrf_token %} 
+                    <div class="row justify-content-start align-items-bottom p-3">
+                        <div class="col-auto">
+                            <select class="custom-select" name="demographic_number">
+                                {% for i in demographic_labels %}
+                                    <option value="{{forloop.counter0}}" id="{{forloop.counter}}"
+                                    {% if i == selected %} selected="selected" {% endif %}>
+                                        {{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="submit" value="Go">
+                    </div>
+                </form>
+                <br>
+                {{ div | safe }}
+                <br>
+            </div>
+        </div>
+    </div>
+
+    </body>
+{% endblock %}

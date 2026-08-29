@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.6"
+# command to install dependencies
+install:
+  - pip install -r src/requirements-travis.txt
+# environment varaibles
+env:
+  - EMAIL_HOST='email-smtp.us-east-1.amazonaws.com'  EMAIL_BACKEND_PROD='django_ses.SESBackend' FROM_EMAIL='info@thepowerofdifference.org' BCC_EMAIL='powerofdifferencetest@gmail.com' ENV='testing'
+# command to run tests
+script:
+  - cd src
+  - python manage.py makemigrations core
+  - python manage.py migrate
+  - python manage.py collectstatic
+  - python manage.py test

@@ -1,0 +1,22 @@
+<html lang="en"></html>
+<link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+<div role="main" style="font-size: 15px; line-height: 2; font-family: 'Muli', Verdana, sans-serif;">
+    <p>
+        Hi {{ abstract_user.first_name }},
+    </p>
+    <p>
+        Thank you for registering to take the Power of Difference Assessment. <a role="link"
+        href="{{ protocol }}://{{ domain }}{% url 'core:verify_email' uidb64=uid token=token %}">Please click here to
+        verify your email.</a>
+    </p>
+    <p>
+        NOTE: Once you click the link and start the assessment, you must finish it within an hour. You will not be able to change devices while you are taking the assessment.
+    </p>
+    <p>
+        We hope you find the PDA meaningful and helpful!<br/>
+        The Sum <br/>
+        Charlottesville, VA<br/>
+        www.thesum.org<br/>
+        Please send any replies to info@thesum.org
+    </p>
+</div>

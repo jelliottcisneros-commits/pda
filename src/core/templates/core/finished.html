@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <title>Power of Difference Assessment - Finished</title>
+</head>
+
+<div class="container p-4" role="main">
+    <div class="row">
+        <div class="col">
+
+            <h3 class="text-center mb-4">
+                Assessment complete… congratulations and thanks!
+            </h3>
+
+            <p>
+                Your responses have been submitted, and your results are being calculated and emailed directly to you.
+            </p>
+
+            <p>
+                Please click the <strong>Schedule Consultation</strong> button below.
+                You will be taken to our scheduler to set up an online, hour-long consultation
+                at a time that is convenient for you.
+            </p>
+
+            {% if scheduling_url %}
+                <div class="text-center my-4">
+                    <a class="btn btn-primary"
+                       role="button"
+                       href="{{ scheduling_url }}"
+                       target="_blank"
+                       rel="noopener">
+                        Schedule Consultation
+                    </a>
+                </div>
+            {% endif %}
+
+            <p>
+                You will also receive an email with your results and related information about
+                the Power of Difference Model (PDM). Please know that the graphs and data provided
+                may not make a lot of sense until your conversation with your consultant—and can
+                easily be misread!
+            </p>
+
+            <p>
+                Your highly trained consultant won't interpret your results for you. Instead,
+                your consultant is trained to ask questions that support you in exploring what
+                the results mean to you, where that meaning comes from in your life experience,
+                and what direction you feel compelled to go based on what you discover.
+            </p>
+
+            <p>
+                We take this approach because we have found that identical results can mean very
+                different things for different people. The Power of Difference Assessment (PDA)
+                is really a <strong>supported conversation starter</strong>.
+            </p>
+
+            <p>
+                Your consultant will have lots of experience listening to these conversations
+                and may offer salient questions or insights to support your exploration and learning.
+            </p>
+
+            <p>
+                Rather than thinking of the PDA as a skill or competency assessment—like a math
+                test—think of it more like a personality assessment.
+                <strong>There is no better or worse, no blame or shame, no smart or not smart.</strong>
+                You decide the meaning of your results, with the support of your consultant.
+            </p>
+
+            <p>
+                If you have questions before or after your consultation, or if you don't see your
+                results email in your inbox or spam folder, please contact us at
+                <a href="mailto:info@thesum.org">info@thesum.org</a>.
+            </p>
+
+            {% if not scheduling_url %}
+                <p class="text-center">
+                    Your results have been submitted. The Sum will follow up with next steps for your consultation.
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

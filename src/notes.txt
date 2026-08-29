@@ -1,0 +1,2 @@
+for some machines:
+https://github.com/darklow/django-suit/tarball/v2 does not work, install django-suit instead

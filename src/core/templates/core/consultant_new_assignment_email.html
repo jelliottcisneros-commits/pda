@@ -1,0 +1,18 @@
+{% load i18n %}
+{% autoescape off %}
+
+Hello,
+
+A new assessment has been assigned to you. Click the link below for more details:
+{{ protocol }}://{{ domain }}{% url 'admin:core_assessment_detailed_view' assessment_pk=assessment_pk %}
+
+Kind Regards,
+J. Elliott Cisneros
+Executive Director/Founder
+434.260.9377
+Study Center: 914 E. Jefferson St, Suite G4
+PO Box 2754, Charlottesville, Virginia, 22902
+www.thesum.org
+info@thesum.org
+
+{% endautoescape %}

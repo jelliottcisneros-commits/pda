@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <title>Power of Difference Assessment - Finished</title>
+</head>
+<div class="container p-4" role="main">
+    <div class="row pb-6">
+        <div class="col-md-3 offset-md-1">
+            <img src="{% static 'core/img/pda_pdf_header.jpg' %}" class="img-fluid" alt="PDA Header logo">
+        </div>
+        <div class="col-md-6">
+            <h1 class="pb-5"></h1>
+            <h1 class="text-center">Congratulations!</h1>
+            <h1 class="text-center">You made it to the end!</h1>
+        </div>
+    </div>
+    <div class="row pb-6">
+        <div class="col-md-8">
+            <h1 class="pb-5"></h1>
+            <p class="text-center" style="font-weight:bold;font-size:large;">
+                Your results will be combined with your group (without names<br>
+                associated) and will be stored on our system in case you decide<br>
+                to have a one-on-one consultation. Please let us know if you<br>
+                have any questions, difficulties, or ideas.<br>
+                <a href="mailto:info@thesum.org">info@thesum.org</a>
+            </p>
+        </div>
+        <div class="col-md-3">
+            <img src="{% static 'core/img/pda_pdf_logo.jpg' %}" class="img-fluid" alt="PDA logo">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+# Local development dependencies.
+#
+# This file keeps the legacy app runnable on a modern Mac/Python 3.9 setup.
+# Production still uses requirements.txt until the stack is deliberately upgraded.
+Django==2.2.28
+django-environ==0.4.5
+pytz==2019.3
+sqlparse==0.3.0
+django-paypal==1.0.0
+https://github.com/darklow/django-suit/tarball/v2
+reportlab==3.6.13
+boto3==1.4.4
+django-storages==1.8
+bokeh==1.4.0
+django-guardian==2.4.0
+django-ses==3.6.0
+mock==5.2.0
+
+# Compatibility pins for Bokeh 1.4 and the macOS system Python SSL stack.
+Jinja2<3
+MarkupSafe<2
+numpy<2
+urllib3<2

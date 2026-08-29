@@ -1,0 +1,129 @@
+<div class="form-inline py-2">
+    <div class="form-check">
+        <label class="form-check-label" for="response-sort">
+            Sort by response? &nbsp;
+        </label>
+        <input class="form-check-input" type="checkbox" value="" id="response-sort">
+    </div>
+    <div class="form-group mx-2">
+        <label for="sociocultural_location">Sociocultural Location: &nbsp;</label>
+        <select class="form-control" id="sociocultural_location">
+            <option value="all" selected=>All</option>
+            {% for sociocultural_location in sociocultural_locations %}
+                <option value="{{ sociocultural_location.0 }}">{{ sociocultural_location.0 }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group mx-2">
+        <label for="power_perspective">Power Perspective: &nbsp;</label>
+        <select class="form-control" id="power_perspective">
+            <option value="all" selected>All</option>
+            {% for power_perspective in power_perspectives %}
+                <option value="{{ power_perspective.0 }}">{{ power_perspective.0 }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="mb-3">
+    Strongly agree <span id="strongly-agree-box" class="legend">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    &nbsp;
+    Agree more than disagree <span id="agree-more-than-disagree-box"
+                                   class="legend">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    &nbsp;
+    Agree and disagree about the same <span id="agree-and-disagree-about-the-same-box" class="legend">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    &nbsp;
+    Disagree more than agree <span id="disagree-more-than-agree-box"
+                                   class="legend">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    &nbsp;
+    Strongly disagree <span id="strongly-disagree-box" class="legend">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+</div>
+<table class="table border">
+    <thead>
+    <tr>
+        <th scope="col"></th>
+        <th scope="col">Statement</th>
+        <th scope="col">Sociocultural Location</th>
+        <th scope="col">Power Perspective</th>
+        <th scope="col">Response</th>
+    </tr>
+    </thead>
+    <tbody id="responses_sorted_by_question_number-tbody">
+    {% for response in responses_sorted_by_question_number %}
+        {% include 'admin/core/assessment/includes/response_tr.html' %}
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No responses available</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tbody id="responses_sorted_by_response_choice-tbody" hidden>
+    {% for response in responses_sorted_by_response_choice %}
+        {% include 'admin/core/assessment/includes/response_tr.html' %}
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No responses available</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    function reFilter() {
+        const selectedSocioculturalLocation = socioculturalLocationSelector.value;
+        const selectedPowerPerspective = powerPerspectiveSelector.value;
+        for (let response of responses) {
+            const shouldShowBasedOnSocioculturalLocation = selectedSocioculturalLocation === "all" ||
+                response.getAttribute("data-sociocultural_location") === selectedSocioculturalLocation;
+            const shouldShowBasedOnPowerPerspective = selectedPowerPerspective === "all" ||
+                response.getAttribute("data-power_perspective") === selectedPowerPerspective;
+            const shouldShow = shouldShowBasedOnPowerPerspective && shouldShowBasedOnSocioculturalLocation;
+            response.hidden = !(shouldShow);
+        }
+    }
+
+    function reSort() {
+        if (sortByResponseCheckbox.checked === true) {
+            responsesSortedByQuestionNumberTBody.hidden = true;
+            responsesSortedByResponseChoiceTBody.hidden = false;
+        } else {
+            responsesSortedByQuestionNumberTBody.hidden = false;
+            responsesSortedByResponseChoiceTBody.hidden = true;
+        }
+    }
+
+    const socioculturalLocationSelector = document.querySelector("select#sociocultural_location");
+    const powerPerspectiveSelector = document.querySelector("select#power_perspective");
+    const responses = document.querySelectorAll(".response-tr");
+    const responsesSortedByQuestionNumberTBody = document.getElementById("responses_sorted_by_question_number-tbody");
+    const responsesSortedByResponseChoiceTBody = document.getElementById("responses_sorted_by_response_choice-tbody");
+    const sortByResponseCheckbox = document.getElementById("response-sort");
+
+    sortByResponseCheckbox.onchange = reSort;
+    socioculturalLocationSelector.onchange = reFilter;
+    powerPerspectiveSelector.onchange = reFilter;
+</script>
+<style>
+    td[data-response="strongly agree"], #strongly-agree-box {
+        background: rgba(253, 255, 177, 0.54);
+    }
+
+    td[data-response="agree more than disagree"], #agree-more-than-disagree-box {
+        background: rgba(203, 255, 200, 0.49);
+    }
+
+    td[data-response="agree and disagree about the same"], #agree-and-disagree-about-the-same-box {
+        background: rgba(231, 214, 255, 0.51);
+    }
+
+    td[data-response="disagree more than agree"], #disagree-more-than-agree-box {
+        background: rgba(255, 172, 167, 0.51);
+    }
+
+    td[data-response="strongly disagree"], #strongly-disagree-box {
+        background: rgba(178, 224, 255, 0.54);
+    }
+
+    .legend {
+        border: 1px solid grey;
+    }
+</style>

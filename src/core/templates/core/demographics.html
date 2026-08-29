@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load core_extras %}
+{% block content %}
+<script>
+    // disallow user to hit browser's back button
+    // source: https://stackoverflow.com/a/34337617/10161232
+    history.pushState(null, document.title, location.href);
+    window.addEventListener('popstate', function (event) {
+        history.pushState(null, document.title, location.href);
+    });
+</script>
+<head>
+    <title>Power of Difference Assessment - Demographics</title>
+</head>
+    <div class="container p-4" role="main">
+        
+        <div class="row p-3">
+            <div class="col-3  mx-auto ">
+                <img src="{% static 'core/img/PDAlogo.png' %}" class="img-fluid" role="img" alt="PDA logo">
+            </div>
+            <div class="row font-weight-bold" role="note">
+                <h1 role="heading">Power of Difference Assessment - Demographics</h1>
+                <p>
+                    Please pay close attention to the 19 demographics questions as they not only assist
+                    with our research and help us to improve the survey, in certain cases, your score is
+                    automatically adjusted according to your identified demographic location.
+                </p>
+            </div>
+            <br>
+            <div class="row">
+                <form class="col-md-12 mx-auto bg-white p-4 rounded-lg" role="form" method="POST"
+                      action="{% url 'core:demographics_submit' user_id=user_id assessment_id=assessment_id %}" autofocus="true">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {% for field in form %}
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="{{ field.id_for_label }}" class="d-block mt-2">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ field|add_class_to_form_field:'form-control' }}
+                                    <p class="small">{{ field.help_text }}</p>
+                                    {% for error in field.errors %}
+                                        <p class="small text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                    <button class="btn btn-primary btn-block" role="button">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+    <head>
+        <title>Power of Difference Assessment - Home</title>
+    </head>
+    <div class="container p-4">
+
+        <div class="row p-3" role="main">
+            <div class="col-3  mx-auto ">
+                <img src="{% static 'core/img/PDAlogo.png' %}" class="img-fluid" role="img" alt="PDA logo">
+            </div>
+            <div class="col">
+                <h1 role="heading">Welcome to The Power of Difference Assessment</h1>
+
+                <p>
+                    The purpose of the PDA is
+                    to identify the unconscious patterns you “hold” or “value" in relationship to the
+                    intersection of power and our sociocultural differences of race, sexual
+                    orientation, disability, culture, religion, gender, and class. This information can
+                    help us to “leverage” or integrate the assets of these patterns while minimizing
+                    their limitations. The PDA has 70 items and requires approximately 20 minutes to
+                    complete.
+                </p>
+
+                <p>
+                    IMPORTANT: In the reported results you will encounter information which is based on the Power of
+                    Difference Model and the PDA developers’ experience. The Sum makes no claim as to the
+                    assessment&#39;s reliability and validity as this analysis is still in the beginning phases. If you
+                    are
+                    unprepared to encounter information of this nature, with which you may not agree, which you may
+                    find objectionable, and about which you may not be conscious, do not proceed.</p>
+
+
+                <p>The PDA may not be administered or
+                    reproduced in part or in whole, without the express written permission of The Sum - electronically
+                    or by other means.
+                </p>
+
+                <a href="/register" class="btn btn-primary" role="button">Register </a>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+<div class="container border">
+{% if user_fields %}
+    {% for field_name, field_value in user_fields.items %}
+        {% include 'admin/core/assessment/includes/field_row.html' %}
+    {% endfor %}
+{% else %}
+    User no longer exists
+{% endif %}
+</div>

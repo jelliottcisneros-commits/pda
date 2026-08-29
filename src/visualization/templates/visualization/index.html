@@ -1,0 +1,19 @@
+{% extends 'visualization/base.html' %}
+{% load static %}
+{% block content %}
+    <body>
+    <div class="container p-4" role="main">
+        <div class="row p-3">
+            <div class="col">
+                <h1 role="heading">PDA Visualizations</h1>
+                <br>
+                <h5><a href="{% url 'visualization:demographics' demographic_number='0'%}" role="link">Demographics</a></h5>
+                <h5><a href="{% url 'visualization:responseindex' %}">Responses</a></h5>
+                <h5><a href="{% url 'visualization:scores' score_type='Overall Score' demographic_number=none_value %}" role="link">Scores</a></h5>
+            </div>
+        </div>
+    </div>
+    </body>
+
+
+{% endblock %}

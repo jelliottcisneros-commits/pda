@@ -1,0 +1,46 @@
+{% include "admin/change_form.html" %}
+<script type="text/javascript">
+    /* When the demographic field for a question changes, this javascript script updates the demographic choices the admin can choose from */
+
+    function getNewOptionsAsHTML(chosenField, chosenChoice=null){
+        const choices = demographicFieldToChoicesMap.get(chosenField);
+        let newInnerHTML = "<option value selected>-----</option>";
+        if (chosenChoice){
+            let newInnerHTML = "<option value>-----</option>";
+        }
+        if (choices) {
+            for (let choice of choices){
+                if (chosenChoice === choice[0]){
+                    newInnerHTML += "<option selected value=\"" + choice[0] + "\">"+ choice[1] + "</option>"
+                }
+                else {
+                    newInnerHTML += "<option value=\"" + choice[0] + "\">"+ choice[1] + "</option>"
+                }
+            }
+        }
+        return newInnerHTML;
+    }
+
+    function getDemographicFieldToChoicesMap(){
+        // uses django context variable demographic_field_to_choices_map to produce a javascript map
+        let demographicFieldToChoicesMap = new Map();
+        {% for field, choices in demographic_field_to_choices_map.items %}
+            demographicFieldToChoicesMap.set('{{ field|safe }}', [
+                {% for choice in choices %}
+                    ["{{ choice.0|safe }}", "{{ choice.1|safe }}"],
+                {% endfor %}
+            ]);
+        {% endfor %}
+        return demographicFieldToChoicesMap;
+    }
+
+    const demographicFieldSelector = document.getElementById("id_secondary_demographic_type");
+    const demographicChoiceSelector = document.getElementById("id_secondary_demographic_choice");
+    const demographicFieldToChoicesMap = getDemographicFieldToChoicesMap();
+    demographicChoiceSelector.innerHTML = getNewOptionsAsHTML(demographicFieldSelector.value, "{{ original.secondary_demographic_choice }}"); // setting correct initial value upon page load
+    demographicFieldSelector.addEventListener('change', (event) => {
+        // When selected demographic field changes we have to update the demographic choices to choose from
+        const newSelectedField = event.target.value;
+        demographicChoiceSelector.innerHTML = getNewOptionsAsHTML(newSelectedField);
+    })
+</script>

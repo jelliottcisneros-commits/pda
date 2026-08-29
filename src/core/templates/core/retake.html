@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load core_extras %}
+{% block content %}
+<head>
+    <title>Power of Difference Assessment - Reverification</title>
+</head>
+    <link rel="stylesheet" href="{% static 'core/css/register.css' %}">
+    <div class="container p-4" role="main">
+        <form class="col-md-6 mx-auto bg-light p-5 rounded-lg" method="POST" action="{% url 'core:retake' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <p class="text-center font-weight-bold pb-2">If the admin has granted you permission to retake the assessment, please enter the email you registered with here.</p>
+                {{ form.email|add_class_to_form_field:'form-control text-center' }}
+                {% for error in form.email.errors %}
+                    <p class="small text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary btn-block" role="button">Reverify Email</button>
+        </form>
+    </div>
+{% endblock %}

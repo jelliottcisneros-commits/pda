@@ -1,0 +1,8 @@
+<tr class="response-tr" data-sociocultural_location="{{ response.sociocultural_location }}"
+    data-power_perspective="{{ response.power_perspective }}" data-response="{{ response }}">
+    <th scope="row">{{ response.question_number }}</th>
+    <td>{{ response.statement }}</td>
+    <td data-response="{{ response.response }}">{{ response.response|capfirst }}</td>
+    <td>{{ response.sociocultural_location }}</td>
+    <td>{{ response.power_perspective }}</td>
+</tr>

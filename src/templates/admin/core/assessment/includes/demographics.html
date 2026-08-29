@@ -1,0 +1,9 @@
+<div class="container border">
+{% if demographic_fields %}
+    {% for field_name, field_value in demographic_fields.items %}
+        {% include 'admin/core/assessment/includes/field_row.html' %}
+    {% endfor %}
+{% else %}
+    No demographic information available
+{% endif %}
+</div>

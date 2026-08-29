@@ -1,0 +1,8 @@
+<div class="container border">
+    {% with field_name="Consultants" field_value=consultants %}
+        {% include 'admin/core/assessment/includes/field_row.html' %}
+    {% endwith %}
+    {% with field_name="PDF Report" field_value=pdf_link %}
+        {% include 'admin/core/assessment/includes/field_row.html' %}
+    {% endwith %}
+</div>
