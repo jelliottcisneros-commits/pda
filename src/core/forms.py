@@ -125,7 +125,7 @@ class ConsultantCreationForm(ModelForm):
             self.cleaned_data['email'])  # setting username from the user in the email
         self.instance.is_staff = True
         consultant = super().save(commit=False)
-        consultant.set_password(BaseUserManager().make_random_password())  # setting random password,
+        consultant.set_password(get_random_string(length=12))  # setting random password,
         # consultant will get to reset later.
         if commit:
             consultant.save()
@@ -171,7 +171,7 @@ class ViewOnlyAdminCreationForm(ModelForm):
             self.cleaned_data['email'])  # setting username from the user in the email
         self.instance.is_staff = True
         view_only_admin = super().save(commit=False)
-        view_only_admin.set_password(BaseUserManager().make_random_password())  # setting random password,
+        view_only_admin.set_password(get_random_string(length=12))  # setting random password,
         # consultant will get to reset later.
         if commit:
             view_only_admin.save()

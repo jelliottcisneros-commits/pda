@@ -6,6 +6,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpRequest
 from django.test import Client
 from django.contrib.auth.models import User as AuthUser
+from django.utils.crypto import get_random_string
 
 from TheSum import settings
 from core.constants import ACCESS_TYPE_INST
@@ -40,7 +41,7 @@ def create_view_only_admin(view_only_admin_dict=None):
     view_only_admin = ViewOnlyAdmin()
     for attr, attr_val in view_only_admin_dict.items():
         setattr(view_only_admin, attr, attr_val)
-    view_only_admin.set_password(BaseUserManager().make_random_password())
+    view_only_admin.set_password(get_random_string(length=12))
     view_only_admin.save()
     return view_only_admin    
 
@@ -50,7 +51,7 @@ def create_consultant(consultant_dict=None):
     consultant = Consultant()
     for attr, attr_val in consultant_dict.items():
         setattr(consultant, attr, attr_val)
-    consultant.set_password(BaseUserManager().make_random_password())
+    consultant.set_password(get_random_string(length=12))
     consultant.save()
     return consultant
 

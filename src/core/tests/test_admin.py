@@ -71,7 +71,7 @@ class UserAdminTest(TestCase):
 
         request.user.is_superuser = True
         qs = self.user_admin.get_queryset(request)
-        self.assertQuerysetEqual(qs, User.objects.all(), transform=lambda x: x, ordered=False)
+        self.assertQuerySetEqual(qs, User.objects.all(), transform=lambda x: x, ordered=False)
 
 
 class AccessCodeAdminTests(TestCase):
@@ -150,12 +150,12 @@ class AssessmentAdminTests(TestCase):
         request.user = self.consultant  # faking login
         qs = self.assessment_admin.get_queryset(request)
         self.assertNotIn(assessment_without_view_permission, qs)
-        self.assertQuerysetEqual(qs, {assessment_with_view_permission_1, assessment_with_view_permission_2},
+        self.assertQuerySetEqual(qs, {assessment_with_view_permission_1, assessment_with_view_permission_2},
                                  transform=lambda x: x, ordered=False)
 
         request.user.is_superuser = True
         qs = self.assessment_admin.get_queryset(request)
-        self.assertQuerysetEqual(qs, Assessment.objects.all(), transform=lambda x: x, ordered=False)
+        self.assertQuerySetEqual(qs, Assessment.objects.all(), transform=lambda x: x, ordered=False)
 
     def test_demo_link_method_when_demographic_is_none(self):
         """return empty string"""
@@ -350,7 +350,7 @@ class DemographicAdminTest(TestCase):
 
         request.user.is_superuser = True
         qs = self.demographic_admin.get_queryset(request)
-        self.assertQuerysetEqual(qs, Demographic.objects.all(), transform=lambda x: x, ordered=False)
+        self.assertQuerySetEqual(qs, Demographic.objects.all(), transform=lambda x: x, ordered=False)
 
     def test_admin_redirect_to_demographic_obj(self):
         # testing url redirects on admin: 301 (moved permanently), 302 (found/moved temporarily)
