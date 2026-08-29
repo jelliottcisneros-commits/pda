@@ -82,4 +82,4 @@ Security defaults are enabled automatically for `ENV=PRODUCTION`: HTTPS redirect
 
 ## Dependency notes
 
-The dependency files keep this app on Django 2.2 for now, but pin it to the final 2.2 patch release. `requirements-local.txt` is the recommended path for local development. The legacy ReportLab Git fork has been replaced with the maintained ReportLab package, pinned to the 3.x line used by the app's legacy chart rendering.
+The legacy production and Travis dependency files remain on Django 2.2.28. `requirements-local.txt` is the recommended path for local development and now uses Django 5.2.17. The production dependency files remain unchanged pending a deliberate production migration. The legacy ReportLab Git fork has been replaced with the maintained ReportLab package, pinned to the 3.x line used by the app's legacy chart rendering.
