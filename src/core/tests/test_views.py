@@ -261,11 +261,20 @@ class RegistrationViewTests(TestCase):
         # check if email contains correct verification link
         self.assertEqual(len(UnverifiedUser.objects.filter(email=user_dict['email'])), 1)
         unverified_user = UnverifiedUser.objects.get(email=user_dict['email'])
-        token = token_generator_for_abstract_user.make_token(unverified_user)
         uidb64 = urlsafe_base64_encode(force_bytes(unverified_user.pk))
         domain = self.client._base_environ()['SERVER_NAME']
-        self.assertIn('http://%s%s' % (domain, reverse('core:verify_email', kwargs=dict(uidb64=uidb64, token=token))),
-                      email.body)
+        url_prefix = 'http://%s/verify_email/%s/' % (domain, uidb64)
+        verification_url = next(
+            line for line in email.body.splitlines()
+            if line.startswith(url_prefix)
+        )
+        token = verification_url[len(url_prefix):].rstrip('/')
+        self.assertTrue(
+            token_generator_for_abstract_user.check_token(
+                unverified_user,
+                token,
+            )
+        )
 
 
 class RetakeViewTests(TestCase):
@@ -298,12 +307,20 @@ class RetakeViewTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
         self.assertEqual(email.subject, RE_VERIFICATION_EMAIL_SUBJECT)
-        token = token_generator_for_abstract_user.make_token(user)
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         domain = self.client._base_environ()['SERVER_NAME']
-        self.assertIn(
-            'http://%s%s' % (domain, reverse('core:re_verify_email', kwargs=dict(uidb64=uidb64, token=token))),
-            email.body)
+        url_prefix = 'http://%s/re_verify_email/%s/' % (domain, uidb64)
+        verification_url = next(
+            line for line in email.body.splitlines()
+            if line.startswith(url_prefix)
+        )
+        token = verification_url[len(url_prefix):].rstrip('/')
+        self.assertTrue(
+            token_generator_for_abstract_user.check_token(
+                user,
+                token,
+            )
+        )
 
 
 class EmailVerificationViewTests(TestCase):
