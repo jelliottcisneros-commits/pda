@@ -168,11 +168,59 @@ class PDFEmailTests(TestCase):
             reverse('core:score', kwargs=dict(user_id=self.user.pk, assessment_id=self.assessment.pk)),
             follow=True)
         email = mail.outbox[0]
+        self.assertEqual(len(email.attachments), 2)
         self.assertEqual(
             email.attachments[0][0],
+            'PDM_Summary.pdf'
+        )
+        self.assertEqual(
+            email.attachments[1][0],
             f'test@email.com_{self.assessment.pk}_results.pdf'
         )
         mock_save.assert_called_once()  # No file saved!
+
+    @patch('core.views.group_result')
+    @patch('django.core.files.storage.FileSystemStorage.save')
+    def test_group_participant_does_not_receive_individual_results_email(
+        self,
+        mock_save,
+        mock_group_result,
+    ):
+        naming = "pdfs/" + "tj3vavirginia.edu" + "_" + str(self.assessment.pk) + "_results.pdf"
+        mock_save.return_value = naming
+
+        access_code = AccessCode.objects.create(
+            name="Group Email Test",
+            code="!GROUPMAIL",
+            uses_left=1,
+        )
+        CoreGroupuser.objects.create(
+            user=self.user,
+            accesscode=access_code,
+            assessment=self.assessment,
+        )
+
+        session = self.client.session
+        session['user_id'] = self.user.pk
+        session['assessment_id'] = self.assessment.pk
+        session['access_type'] = ACCESS_TYPE_INST
+        session['last_question'] = len(Question.objects.all())
+        session.save()
+
+        self.client.get(
+            reverse(
+                'core:score',
+                kwargs=dict(
+                    user_id=self.user.pk,
+                    assessment_id=self.assessment.pk,
+                ),
+            ),
+            follow=True,
+        )
+
+        mock_group_result.assert_called_once_with(self.assessment.pk)
+        self.assertEqual(len(mail.outbox), 0)
+        mock_save.assert_called_once()
 
     @patch('django.core.files.storage.FileSystemStorage.save')
     def test_email_sends_bcc_admin(self, mock_save):

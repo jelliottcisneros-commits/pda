@@ -460,17 +460,16 @@ def generate_pdf(item, called_from_admin_site):
     from reportlab.graphics.charts.spider import SpiderChart
     from reportlab.graphics.shapes import Drawing, String
     from reportlab.lib import colors
+    from reportlab.lib.colors import Color, HexColor
     from reportlab.lib.enums import TA_CENTER, TA_LEFT
-    from reportlab.lib.pagesizes import landscape, letter
+    from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle
     from reportlab.lib.units import inch
-    from reportlab.pdfgen import canvas  # for pdf report generation
-    from reportlab.platypus import Table, TableStyle, Paragraph
+    from reportlab.pdfgen import canvas
+    from reportlab.platypus import Paragraph
 
-
-    #get the assessment
-    assessment = Assessment.objects.get(pk = item)
-
+    # get the assessment
+    assessment = Assessment.objects.get(pk=item)
     if (called_from_admin_site == False):
         # get score and subscores from assessment
         score = assessment.score
@@ -482,7 +481,7 @@ def generate_pdf(item, called_from_admin_site):
         class_score = score.Class_Score
         sexual_orientation_score = score.Sexual_Orientation_Score
     else:
-        try: 
+        try:
             score = assessment.score
             religion_score = score.Religion_Score
             disability_score = score.Disability_Score
@@ -500,553 +499,53 @@ def generate_pdf(item, called_from_admin_site):
     # canvas is what reportlab draws on
     p = canvas.Canvas(buffer)
 
-    # PDF generation starts here:
+    # set page to A4
+    p.setPageSize(A4)
 
-    # page 1
-    # switch to landscape
-    p.setPageSize(landscape(letter))
     # Image: logo on top left corner
-    p.drawInlineImage(pdf_static_path("core/img/pda_pdf_header.jpg"), .25 * inch, 6 * inch, 2.25 * inch, 2.25 * inch)
-    p.setFont("Helvetica-Bold", 28)
-    p.drawString(3.5 * inch, 8 * inch, "The Power of Difference Model (PDM)")
-    p.setFont("Helvetica", 12)
-    p.drawString(4 * inch, 7.75 * inch, "J Elliott Cisneros MEd, Carla Sherrell, EdD ~ 2016 ALL RIGHTS RESERVED (c)")
-    p.setFont("Helvetica", 14)
-    pstyle=ParagraphStyle('default')
+    # p.drawInlineImage("pda/thesum_logo.jpg", 10, 740, 80, 90)
+    p.drawInlineImage(pdf_static_path("core/img/thesum_logo.jpg"), 10, 740, 80, 90)
 
-    # sets styles for the leading paragraph on this page
+    # Heading
+    p.setFont("Helvetica-Bold", 20)
+    txt = "Power of Difference Assessment (PDA)"
+    p.drawString(2 * inch, 11 * inch, txt)
+
+    # Subheading
+    p.setFont("Helvetica-Bold", 16)
+    if assessment.user is None:
+        p.drawString(2.8 * inch, 10.5 * inch, "Results For: " + assessment.email)
+    else:
+        p.drawString(2.8 * inch, 10.5 * inch,
+                     "Results For: " + assessment.user.first_name + " " + assessment.user.last_name)
+
+    # Paragraph style
+    pstyle = ParagraphStyle('default')
+
     header_par = ParagraphStyle(
         'header_par',
         parent=pstyle,
-        fontSize=16,
-        alignment=TA_CENTER,
+        fontSize=9,
+        fontName="Helvetica",
+        alignment=TA_LEFT,
         leading=17
     )
 
-    par = Paragraph("""<i>The PDM describes three primary perspectives or patterns of thought, behavior, and feeling--related to race, religion, dis/ability, 
-        sexual orientation, gender, socio-economic class, and culture.  These patterns can be thought of, in part, as strategies for managing fear and creating safety... 
-        often learned in childhood.</i>""", header_par)
-    par.wrapOn(p, 7.5 * inch, 3 * inch)
-    par.drawOn(p, 3 * inch, 6.5 * inch)
+    # Paragraph content
+    par = Paragraph("""
+    Thank you for taking the Power of Difference Assessment! During your consultation your consultant will
+    share what we have tended to see <br/>historically with others. They will give you an idea of your primary
+    pattern(s), assets, limitations, and learning edges. They will not interpret your <br/>results, but rather, will ask
+    questions that will invite you to construct meaning for yourself, providing a supported opportunity for you to explore.<br/>They
+    will use an asset-based focus that reframes blame and shame in favor of following curiosity about directions that are
+    compelling and <br/>meaningful to you. Ultimately, they will collaborate with you to develop a kind of map that, like a thumbprint,
+    is unique to you. This map will include <br/>prioritized recommendations that can support, clarify, and empower you in moving
+    toward a vision that unifies your purpose with solidarity across<br/> our differences. 
+    """, header_par)
+    par.wrapOn(p, 10 * inch, 3 * inch)
+    par.drawOn(p, 0.2 * inch, 8.6 * inch)
 
-    par = Paragraph("<b><u><i>PERSPECTIVES/PATTERNS</i></u></b>", header_par)
-    par.wrapOn(p, 3 * inch, .5 * inch)
-    par.drawOn(p, 2.75 * inch, 6 * inch)
-
-    # sets styles for perspective paragraphs
-    perspective_par = ParagraphStyle(
-        'perspective_par',
-        parent=header_par,
-        fontSize=14,
-        alignment=TA_LEFT
-    )
-
-    par = Paragraph("""<b>Sensitivity:</b> I value intelligence, open mindedness, understanding, and 
-        difference.  I don't wan't to offend so I can get stuck or confused around
-        differences.  I can be patronizing as I try to "get others to get it".<br />
-        <i><u>Archetype: Magician</u></i> &nbsp;&nbsp;&nbsp; <i><u>Politics: Tend Liberal</u></i> &nbsp;&nbsp;&nbsp; <i><u>Learning Edge: Strength</u></i>""",
-                    perspective_par)
-    par.wrapOn(p, 6.75 * inch, 2 * inch)
-    par.drawOn(p, .25 * inch, 5 * inch)
-
-    par = Paragraph("""<b>Oneness:</b> I value compassion and connection.  I devalue difference and 
-        can over-value sameness.  I can fail to impact others as I intend and I 
-        tend to avoid conflict.  "Why can't we all just get along."<br />
-        <i><u>Archetype: Lover</u></i> &nbsp;&nbsp;&nbsp;&nbsp; <i><u>Politics: Moderate</u></i> &nbsp;&nbsp;&nbsp;&nbsp <i><u>Learning Edge: Sensitivity</u></i>""",
-                    perspective_par)
-    par.wrapOn(p, 6.75 * inch, 2 * inch)
-    par.drawOn(p, .25 * inch, 3.875 * inch)
-
-    par = Paragraph("""<b>Strength:</b> I value loyalty, bravery, protection, self-sacrifice, and winning. 
-        I evaluate differences, seek dominance, and can create an "enemy."<br />
-        <i><u>Archetype: Warrior</u></i> &nbsp;&nbsp; <i><u>Politics: Tend Conservative</u></i> &nbsp;&nbsp; <i><u>Learning Edge: Oneness</u></i>""",
-                    perspective_par)
-    par.wrapOn(p, 6.75 * inch, 2 * inch)
-    par.drawOn(p, .25 * inch, 3 * inch)
-
-    # leveraging section
-    header_par.alignment = TA_LEFT
-    par = Paragraph("<b><u><i>LEVERAGING</i></u></b>", header_par)
-    par.wrapOn(p, 1.75 * inch, .5 * inch)
-    par.drawOn(p, .25 * inch, 2.5 * inch)
-
-    par = Paragraph("""<i>(leveraging is less of a perspective by itself and more something we do or don't do)</i><br /><br />
-        We integrate and leverage assets from ALL of the perspectives as we feel called.<br />
-        We impact others (generally) in alignment with our intentions across difference.<br />
-        We call others to increased internal integration without blame and shame.<br />
-        We live from solidarity across our differences... refusing silence and violence.<br />
-        We experience greater effectiveness across difference, mission clarity, empowerment, and fulfillment.<br />
-        We experience less rising and falling on external conditions--greater internal stability/immovable sense of peace.<br />
-        <i>* A fourth less significant pattern we call "appreciation" which involves an appreciation of, and typically an over-romanticising or appropriation of a particular group to which a person does not belong.</i>""",
-                    perspective_par)
-    par.wrapOn(p, 10.5 * inch, 3 * inch)
-    par.drawOn(p, .25 * inch, .125 * inch)
-
-    # Image: scarecrow/tin man/lion on right of page 2 and arrows
-    p.drawInlineImage(pdf_static_path("core/img/STL.jpg"), 8 * inch, 1.5 * inch, 3 * inch, 5 * inch)
-    p.drawImage(pdf_static_path("core/img/arrow_1.jpg"), 6.5 * inch, 5.5 * inch, 1.5 * inch, .75 * inch)
-    p.drawImage(pdf_static_path("core/img/arrow_2.jpg"), 7.15 * inch, 4 * inch, 1.5 * inch, .75 * inch)
-    p.drawImage(pdf_static_path("core/img/arrow_3.jpg"), 7 * inch, 3 * inch, 1.5 * inch, .75 * inch)
-
-    p.showPage()
-
-    # page 2 - statements and answers
-    p.translate(.5 * inch, .5 * inch)
-
-    # title
-    p.setFont("Helvetica-Bold", 24)
-    p.drawCentredString(4.5 * inch, 7.5 * inch, "The Power of Difference Assessment")
-    p.setFont("Helvetica", 14)
-    p.drawCentredString(4.5 * inch, 7.25 * inch,
-                        "J Elliott Cisneros MEd, Carla Sherrell, EdD ~ 2016 ALL RIGHTS RESERVED (c)")
-
-    # point breakdown and name
-    p.setFont("Helvetica-Bold", 14)
-    if assessment.user is None:
-        p.drawString(0, 6.85 * inch, "Survey Results For: " + assessment.email)
-    else:
-        p.drawString(0, 6.85 * inch, "Survey Results For: " + assessment.user.last_name + ", " + assessment.user.first_name)
-    p.setFont("Helvetica-Oblique", 14)
-    p.drawString(0, 6.5 * inch, "POINTS:")
-    p.setFont("Helvetica", 12)
-    p.drawString(0, 6.25 * inch, 'For every "a" response: 4 pts')
-    p.drawString(0, 6 * inch, 'For every "b" response: 3 pts')
-    p.drawString(0, 5.75 * inch, 'For every "c" response, 2 pts')
-    p.drawString(0, 5.5 * inch, 'For every "d" response, 1 pt')
-    p.drawString(0, 5.25 * inch, 'For every "e" response, 0 pts')
-
-    # Response options
-    p.setFont("Helvetica-Oblique", 14)
-    p.drawString(2.5 * inch, 6.5 * inch, "RESPONSE OPTIONS")
-    p.setFont("Helvetica", 12)
-    p.drawString(3 * inch, 6.25 * inch, "a. strongly agree")
-    p.drawString(3 * inch, 6 * inch, "b. agree more than disagree")
-    p.drawString(3 * inch, 5.75 * inch, "c. agree and disagree about the same")
-    p.drawString(3 * inch, 5.5 * inch, "d. disagree more than agree; dislike")
-    p.drawString(3 * inch, 5.25 * inch, "e. strongly disagree")
-
-    # Image: text box to the right of response options
-    p.drawInlineImage(pdf_static_path("core/img/page3_1.jpg"), 6 * inch, 5.5 * inch, 2.75 * inch, 1.25 * inch)
-
-    key_data = [[""], [""], [""], [""], [""]]  # empty, to be filled with colors
-    # TableStyle object holds modifiers for table
-    key_style = TableStyle([
-        ('BACKGROUND', (0, 0), (0, 0), colors.yellow),
-        ('BACKGROUND', (0, 1), (0, 1), colors.green),
-        ('BACKGROUND', (0, 2), (0, 2), colors.purple),
-        ('BACKGROUND', (0, 3), (0, 3), colors.HexColor("#EC491E")),
-        ('BACKGROUND', (0, 4), (0, 4), colors.HexColor("#4E89D9"))
-    ])
-    # create the table object
-    key_table = Table(data=key_data, colWidths=.426 * inch)
-    # apply the styles from above
-    key_table.setStyle(key_style)
-    # set canvas, width, and height
-    key_table.wrapOn(p, .426 * inch, 1.25 * inch)
-    # draw it onto the canvas at (x, y)
-    key_table.drawOn(p, 2.5 * inch, 5.15 * inch)
-
-    # Image: logo on right corner of pdf
-    p.drawInlineImage(pdf_static_path("core/img/pda_pdf_header.jpg"), 9 * inch, 6.5 * inch, 1.5 * inch, 1.5 * inch)
-
-    # key
-    p.setFont("Helvetica-Oblique", 14)
-    p.drawString(0, 4.75 * inch, "KEY:")
-    p.setFont("Helvetica", 12)
-    p.drawString(0, 4.5 * inch, "s#: statement #")
-    p.drawString(0, 4.25 * inch, "r: response")
-    p.drawString(0, 4 * inch, "p: power")
-
-    # power perspectives
-    p.setFont("Helvetica-Oblique", 12)
-    p.drawString(1.25 * inch, 4.9 * inch, "POWER PERSPECTIVES:")
-    p.setFont("Helvetica", 12)
-    p.drawString(1.25 * inch, 4.65 * inch, "se=sensitivity")
-    p.drawString(1.25 * inch, 4.4 * inch, "a=appreciation")
-    p.drawString(1.25 * inch, 4.15 * inch, "s=strength")
-    p.drawString(1.25 * inch, 3.9 * inch, "o=oneness")
-    p.drawString(1.25 * inch, 3.65 * inch, "l=leveraged")
-
-    # example images
-    p.setFont("Helvetica-Oblique", 12)
-    p.drawString(3.5 * inch, 4.9 * inch, 'SAMPLE "LEVERAGING" RESULTS:')
-    # if os.environ.get('TRAVIS') != 'true':
-    p.drawInlineImage(pdf_static_path("core/img/page3_2.jpg"), 3.5 * inch, 2.65 * inch, 1 * inch, 2 * inch)
-    p.drawInlineImage(pdf_static_path("core/img/page3_3.jpg"), 4.5 * inch, 2.65 * inch, 2.75 * inch, 2 * inch)
-    p.drawInlineImage(pdf_static_path("core/img/page3_4.jpg"), 7.25 * inch, 3.40 * inch, 2.75 * inch, 1.25 * inch)
-    p.drawInlineImage(pdf_static_path("core/img/page3_5.jpg"), 7.25 * inch, 2.65 * inch, 2.5 * inch, .75 * inch)
-
-    # table headers
-    pstyle = ParagraphStyle('default')
-    religion_head = Paragraph("<b><u>Religion</u></b>", pstyle)
-    disability_head = Paragraph("<b><u>Disability</u></b>", pstyle)
-    culture_head = Paragraph("<b><u>Culture</u></b>", pstyle)
-    gender_head = Paragraph("<b><u>Gender</u></b>", pstyle)
-    race_head = Paragraph("<b><u>Race</u></b>", pstyle)
-    class_head = Paragraph("<b><u>Class</u></b>", pstyle)
-    sexual_orientation_head = Paragraph("<b><u>LGBTQ+</u></b>", pstyle)
-
-    # religion table
-    # first two rows
-    religion_data = [[religion_head],
-                     ["s#", "r", "p"]]
-
-    # styles for religion table
-    # merges header cells, draws gridlines, makes second header row grey
-    religion_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),  # merges cells in first row
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),  # adds gridlines
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),  # adds outer gridlines
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),  # sets background for second row
-    ])
-
-    # fetches relevant responses from the database.  Be careful if editing!
-    religion_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Religion").order_by(
-        'question_number')
-
-    # adds data to table
-    for response in religion_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        religion_data.append([response.question_number, r, pers])
-        row = len(religion_data) - 1  # current row is last data entered
-        # adds background color depending on which response was chosen
-        if r == 'a':
-            religion_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            religion_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            religion_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            religion_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            religion_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    religion_table = Table(religion_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    religion_table.setStyle(religion_style)
-
-    # disability table
-    disability_data = [[disability_head],
-                       ["s#", "r", "p"]]
-    disability_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    disability_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Disability").order_by(
-        'question_number')
-    for response in disability_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        disability_data.append([response.question_number, r, pers])
-        row = len(disability_data) - 1
-        if r == 'a':
-            disability_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            disability_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            disability_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            disability_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            disability_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    disability_table = Table(disability_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    disability_table.setStyle(disability_style)
-
-    # culture table
-    culture_data = [[culture_head],
-                    ["s#", "r", "p"]]
-    culture_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    culture_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Culture").order_by(
-        'question_number')
-    for response in culture_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        culture_data.append([response.question_number, r, pers])
-        row = len(culture_data) - 1
-        if r == 'a':
-            culture_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            culture_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            culture_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            culture_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            culture_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    culture_table = Table(culture_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    culture_table.setStyle(culture_style)
-
-    # gender table
-    gender_data = [[gender_head],
-                   ["s#", "r", "p"]]
-    gender_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    gender_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Gender").order_by(
-        'question_number')
-    for response in gender_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        gender_data.append([response.question_number, r, pers])
-        row = len(gender_data) - 1
-        if r == 'a':
-            gender_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            gender_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            gender_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            gender_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            gender_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    gender_table = Table(gender_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    gender_table.setStyle(gender_style)
-
-    # race table
-    race_data = [[race_head],
-                 ["s#", "r", "p"]]
-    race_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    race_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Race").order_by(
-        'question_number')
-    for response in race_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        race_data.append([response.question_number, r, pers])
-        row = len(race_data) - 1
-        if r == 'a':
-            race_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            race_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            race_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            race_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            race_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    race_table = Table(race_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    race_table.setStyle(race_style)
-
-    # class table
-    class_data = [[class_head],
-                  ["s#", "r", "p"]]
-    class_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    class_responses = Response.objects.filter(assessment=assessment, sociocultural_location="Class").order_by(
-        'question_number')
-    for response in class_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        class_data.append([response.question_number, r, pers])
-        row = len(class_data) - 1
-        if r == 'a':
-            class_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            class_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            class_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            class_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            class_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    class_table = Table(class_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    class_table.setStyle(class_style)
-
-    # sexual orientation table
-    sexual_orientation_data = [[sexual_orientation_head],
-                               ["s#", "r", "p"]]
-    sexual_orientation_style = TableStyle([
-        ('SPAN', (0, 0), (2, 0)),
-        ('INNERGRID', (0, 0), (-1, -1), .25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-        ('BACKGROUND', (0, 1), (2, 1), colors.lightgrey),
-    ])
-    sexual_orientation_responses = Response.objects.filter(assessment=assessment,
-                                                           sociocultural_location="LGBQ+").order_by(
-        'question_number')
-    for response in sexual_orientation_responses:
-        r = get_response_letter(response.response)
-        pers = get_perspective_letter(response.power_perspective)
-        sexual_orientation_data.append([response.question_number, r, pers])
-        row = len(sexual_orientation_data) - 1
-        if r == 'a':
-            sexual_orientation_style.add('BACKGROUND', (1, row), (1, row), colors.yellow)
-        elif r == 'b':
-            sexual_orientation_style.add('BACKGROUND', (1, row), (1, row), colors.green)
-        elif r == 'c':
-            sexual_orientation_style.add('BACKGROUND', (1, row), (1, row), colors.purple)
-        elif r == 'd':
-            sexual_orientation_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#EC491E"))
-        elif r == 'e':
-            sexual_orientation_style.add('BACKGROUND', (1, row), (1, row), colors.HexColor("#4E89D9"))
-
-    sexual_orientation_table = Table(sexual_orientation_data, colWidths=.426 * inch, rowHeights=.2 * inch)
-    sexual_orientation_table.setStyle(sexual_orientation_style)
-
-    # spacing of tables
-    width = 1.28 * inch
-    height = 3 * inch
-    religion_table.wrapOn(p, width, height)
-    religion_table.drawOn(p, .5 * inch, 0 * inch)
-
-    disability_table.wrapOn(p, width, height)
-    disability_table.drawOn(p, 1.78 * inch, 0 * inch)
-
-    culture_table.wrapOn(p, width, height)
-    culture_table.drawOn(p, 3.06 * inch, 0 * inch)
-
-    gender_table.wrapOn(p, width, height)
-    gender_table.drawOn(p, 4.34 * inch, 0 * inch)
-
-    race_table.wrapOn(p, width, height)
-    race_table.drawOn(p, 5.62 * inch, 0 * inch)
-
-    class_table.wrapOn(p, width, height)
-    class_table.drawOn(p, 6.90 * inch, 0 * inch)
-
-    sexual_orientation_table.wrapOn(p, width, height)
-    sexual_orientation_table.drawOn(p, 8.18 * inch, 0 * inch)
-
-    # finishes page
-    p.showPage()
-
-    
-
-    # page 3 - graphs
-    p.translate(.75*inch, inch)
-
-    # religion graph
-    religion_drawing = Drawing(2.8 * inch, 1.8 * inch)
-    religion_data = [
-        (religion_score.sensitivity, religion_score.oneness, religion_score.strength, religion_score.appreciation,
-         religion_score.leveraged)
-    ]
-    religion = generate_graph()
-    religion.data = religion_data
-
-    religion_title = String(1.4 * inch, 1.7 * inch, "Religion", textAnchor='middle')
-    religion_title.fontName = 'Times-Bold'
-    religion_title.fontSize = 13
-    religion_drawing.add(religion_title)
-    religion_drawing.add(religion)
-
-    renderPDF.draw(religion_drawing, p, 0, 5 * inch, showBoundary=False)
-
-    # disability graph
-    disability_drawing = Drawing(3 * inch, 2 * inch)
-    disability_data = [
-        (disability_score.sensitivity, disability_score.oneness, disability_score.strength,
-         disability_score.appreciation, disability_score.leveraged)
-    ]
-    disability = generate_graph()
-    disability.data = disability_data
-    disability_title = String(1.4 * inch, 1.7 * inch, "Disability", textAnchor='middle')
-    disability_title.fontName = 'Times-Bold'
-    disability_title.fontSize = 13
-    disability_drawing.add(disability_title)
-    disability_drawing.add(disability)
-    renderPDF.draw(disability_drawing, p, 3.25 * inch, 5 * inch, showBoundary=False)
-
-    # culture graph
-    culture_drawing = Drawing(3 * inch, 2 * inch)
-    culture_data = [
-        (culture_score.sensitivity, culture_score.oneness, culture_score.strength, culture_score.appreciation,
-         culture_score.leveraged)
-    ]
-    culture = generate_graph()
-    culture.data = culture_data
-    culture_title = String(1.4 * inch, 1.7 * inch, "Culture", textAnchor='middle')
-    culture_title.fontName = 'Times-Bold'
-    culture_title.fontSize = 13
-    culture_drawing.add(culture_title)
-    culture_drawing.add(culture)
-    renderPDF.draw(culture_drawing, p, 6.5 * inch, 5 * inch, showBoundary=False)
-
-    # gender graph
-    gender_drawing = Drawing(3 * inch, 2 * inch)
-    gender_data = [
-        (gender_score.sensitivity, gender_score.oneness, gender_score.strength, gender_score.appreciation,
-         gender_score.leveraged)
-    ]
-    gender = generate_graph()
-    gender.data = gender_data
-    gender_title = String(1.4 * inch, 1.7 * inch, "Gender", textAnchor='middle')
-    gender_title.fontName = 'Times-Bold'
-    gender_title.fontSize = 13
-    gender_drawing.add(gender_title)
-    gender_drawing.add(gender)
-    renderPDF.draw(gender_drawing, p, 0 * inch, 2.5 * inch, showBoundary=False)
-
-    # race graph
-    race_drawing = Drawing(3 * inch, 2 * inch)
-    race_data = [
-        (race_score.sensitivity, race_score.oneness, race_score.strength, race_score.appreciation,
-         race_score.leveraged)
-    ]
-    race = generate_graph()
-    race.data = race_data
-    race_title = String(1.4 * inch, 1.7 * inch, "Race", textAnchor='middle')
-    race_title.fontName = 'Times-Bold'
-    race_title.fontSize = 13
-    race_drawing.add(race_title)
-    race_drawing.add(race)
-    renderPDF.draw(race_drawing, p, 3.25 * inch, 2.5 * inch, showBoundary=False)
-
-    # class graph
-    class_drawing = Drawing(3 * inch, 2 * inch)
-    class_data = [
-        (class_score.sensitivity, class_score.oneness, class_score.strength, class_score.appreciation,
-         class_score.leveraged)
-    ]
-    class_graph = generate_graph()
-    class_graph.data = class_data
-    class_title = String(1.4 * inch, 1.7 * inch, "Class", textAnchor='middle')
-    class_title.fontName = 'Times-Bold'
-    class_title.fontSize = 13
-    class_drawing.add(class_title)
-    class_drawing.add(class_graph)
-    renderPDF.draw(class_drawing, p, 6.5 * inch, 2.5 * inch, showBoundary=False)
-
-    # sexual orientation graph
-    sexual_orientation_drawing = Drawing(3 * inch, 2 * inch)
-    sexual_orientation_data = [
-        (sexual_orientation_score.sensitivity, sexual_orientation_score.oneness, sexual_orientation_score.strength,
-         sexual_orientation_score.appreciation, sexual_orientation_score.leveraged)
-    ]
-    sexual_orientation_graph = generate_graph()
-    sexual_orientation_graph.data = sexual_orientation_data
-    sexual_orientation_title = String(1.4 * inch, 1.7 * inch, "Sexual Orientation", textAnchor='middle')
-    sexual_orientation_title.fontName = 'Times-Bold'
-    sexual_orientation_title.fontSize = 13
-    sexual_orientation_drawing.add(sexual_orientation_title)
-    sexual_orientation_drawing.add(sexual_orientation_graph)
-    renderPDF.draw(sexual_orientation_drawing, p, 0 * inch, 0 * inch, showBoundary=False)
-
-    # Image: logo on bottom of page
-    p.drawInlineImage(pdf_static_path("core/img/pda_pdf_logo.jpg"), 3.6 * inch, -.25 * inch, 2 * inch, 2 * inch)
+    p.translate(0.5 * inch, inch)
 
     # total across all graph
     total_drawing = Drawing(3 * inch, 2 * inch)
@@ -1054,187 +553,21 @@ def generate_pdf(item, called_from_admin_site):
         (score.sensitivity_total, score.oneness_total, score.strength_total, score.appreciation_total,
          score.leveraged_total)
     ]
-    total_graph = generate_total_graph()
+    total_graph = generate_total_graph(width=2, height=1.5)
     total_graph.data = total_data
-    total_title = String(1.4 * inch, 1.6 * inch, "Total across all", textAnchor='middle')
+    total_title = String(1 * inch, 1.4 * inch, "Total across all", textAnchor='middle')
     total_title.fontName = 'Times-Bold'
-    total_title.fontSize = 13
+    total_title.fontSize = 10
     total_drawing.add(total_title)
     total_drawing.add(total_graph)
-    renderPDF.draw(total_drawing, p, 6.5 * inch, 0 * inch, showBoundary=False)
+    renderPDF.draw(total_drawing, p, 0.8, 6.1 * inch, showBoundary=False)
 
-    p.showPage()
-
-    # page 4 - more graphs
-    p.translate(.25 * inch, -.25 * inch)
-
-    # locations and responses to loop through
-    locations = ["Religion", "Disability", "Culture", "Gender", "Race", "Class", "LGBQ+"]
-    responses = ["strongly agree",
-                 "agree more than disagree",
-                 "agree and disagree about the same",
-                 "disagree more than agree",
-                 "strongly disagree"]
-
-    se_totals = [0, 0, 0, 0, 0]
-    o_totals = [0, 0, 0, 0, 0]
-    s_totals = [0, 0, 0, 0, 0]
-    a_totals = [0, 0, 0, 0, 0]
-    l_totals = [0, 0, 0, 0, 0]
-
-    # create a table for each social_location, left to right
-    for location in locations:
-        se_loc_total = 0
-        o_loc_total = 0
-        s_loc_total = 0
-        a_loc_total = 0
-        l_loc_total = 0
-        # utility to multiply number of responses by point value
-        # decremented at end of loop
-        multiplier = 4
-        # utility to see what index to add to in totals lists
-        # incremented at end of loop
-        response_num = 0  # 0 = a, 1 = b, ...
-        for response in responses:
-            # count the number of responses for each perspective matching the current response
-            se = Response.objects.filter(assessment=assessment, power_perspective="Sensitivity", response=response,
-                                         sociocultural_location=location).count()
-            o = Response.objects.filter(assessment=assessment, power_perspective="Oneness", response=response,
-                                        sociocultural_location=location).count()
-            s = Response.objects.filter(assessment=assessment, power_perspective="Strength", response=response,
-                                        sociocultural_location=location).count()
-            a = Response.objects.filter(assessment=assessment, power_perspective="Appreciation", response=response,
-                                        sociocultural_location=location).count()
-            l = Response.objects.filter(assessment=assessment, power_perspective="Leveraged", response=response,
-                                        sociocultural_location=location).count()
-            # multiply by number of points for this response
-            # append totals to data, i.e. add a row
-            total = multiplier * (se + o + s + a + l)
-            se_totals[response_num] += se * multiplier
-            o_totals[response_num] += o * multiplier
-            s_totals[response_num] += s * multiplier
-            a_totals[response_num] += a * multiplier
-            l_totals[response_num] += l * multiplier
-
-            # decrement multiplier and increment response_num
-            multiplier -= 1
-            response_num += 1
-
-    p.drawString(0, 8.5 * inch, "Totals for each Power Perspective by response option/point value")
-    p.drawString(0, 8.27 * inch, "a. strongly agree; love")  # multiplier = 4
-    data = [
-        [int(se_totals[0] / 4), "se", se_totals[0]],
-        [int(o_totals[0] / 4), "o", o_totals[0]],
-        [int(s_totals[0] / 4), "s", s_totals[0]],
-        [int(a_totals[0] / 4), "a", a_totals[0]],
-        [int(l_totals[0] / 4), "l", l_totals[0]]]
-    table = Table(data, colWidths=.4 * inch, rowHeights=.23 * inch)
-    table.wrapOn(p, 1.28 * inch, 1.15 * inch)
-    table.drawOn(p, 0, 7.12 * inch)
-    p.drawString(0, 6.89 * inch, "b. agree more than disagree; like")  # multiplier = 3
-    data = [
-        [int(se_totals[1] / 3), "se", se_totals[1]],
-        [int(o_totals[1] / 3), "o", o_totals[1]],
-        [int(s_totals[1] / 3), "s", s_totals[1]],
-        [int(a_totals[1] / 3), "a", a_totals[1]],
-        [int(l_totals[1] / 3), "l", l_totals[1]]]
-    table = Table(data, colWidths=.4 * inch, rowHeights=.23 * inch)
-    table.wrapOn(p, 1.28 * inch, 1.15 * inch)
-    table.drawOn(p, 0, 5.74 * inch)
-    p.drawString(0, 5.51 * inch, "c. agree and disagree about the same; neutral emotional reaction")  # multiplier = 2
-    data = [
-        [int(se_totals[2] / 2), "se", se_totals[2]],
-        [int(o_totals[2] / 2), "o", o_totals[2]],
-        [int(s_totals[2] / 2), "s", s_totals[2]],
-        [int(a_totals[2] / 2), "a", a_totals[2]],
-        [int(l_totals[2] / 2), "l", l_totals[2]]]
-    table = Table(data, colWidths=.4 * inch, rowHeights=.23 * inch)
-    table.wrapOn(p, 1.28 * inch, 1.15 * inch)
-    table.drawOn(p, 0, 4.36 * inch)
-    p.drawString(0, 4.13 * inch, "d. disagree more than agree; dislike")  # multiplier = 1
-    data = [
-        [int(se_totals[3]), "se", se_totals[3]],
-        [int(o_totals[3]), "o", o_totals[3]],
-        [int(s_totals[3]), "s", s_totals[3]],
-        [int(a_totals[3]), "a", a_totals[3]],
-        [int(l_totals[3]), "l", l_totals[3]]]
-    table = Table(data, colWidths=.4 * inch, rowHeights=.23 * inch)
-    table.wrapOn(p, 1.28 * inch, 1.15 * inch)
-    table.drawOn(p, 0, 2.98 * inch)
-    p.drawString(0, 2.75 * inch, "e. strongly disagree; hate")  # multiplier = 0
-    # need to recalculate totals because they can't be derived due to multiplier of 0
-    se = Response.objects.filter(assessment=assessment, power_perspective="Sensitivity",
-                                 response="strongly disagree").count()
-    o = Response.objects.filter(assessment=assessment, power_perspective="Oneness",
-                                response="strongly disagree").count()
-    s = Response.objects.filter(assessment=assessment, power_perspective="Strength",
-                                response="strongly disagree").count()
-    a = Response.objects.filter(assessment=assessment, power_perspective="Appreciation",
-                                response="strongly disagree").count()
-    l = Response.objects.filter(assessment=assessment, power_perspective="Leveraged",
-                                response="strongly disagree").count()
-    data = [
-        [se, "se", 0],
-        [o, "o", 0],
-        [s, "s", 0],
-        [a, "a", 0],
-        [l, "l", 0]]
-    table = Table(data, colWidths=.4 * inch, rowHeights=.23 * inch)
-    table.wrapOn(p, 1.28 * inch, 1.15 * inch)
-    table.drawOn(p, 0, 1.6 * inch)
-
-    # totals
-    data = [
-        ["sensitivity", score.sensitivity_total],
-        ["oneness", score.oneness_total],
-        ["strength", score.strength_total],
-        ["appreciation", score.appreciation_total],
-        ["leveraged", str(score.leveraged_total) + "    " + str(
-            56 - score.leveraged_total) + '  (difference between "leveraged" possible and "leveraged" chosen)']
-    ]
-    table = Table(data, colWidths=1.2 * inch, rowHeights=.16 * inch)
-    table.wrapOn(p, 1.28 * inch, .8 * inch)
-    table.drawOn(p, 0, .8 * inch)
-    leveraged_difference = 56 - score.leveraged_total
-    total = score.sensitivity_total + score.oneness_total + score.strength_total + score.appreciation_total + leveraged_difference
-    percentage = int(round((float(total) / float(280)), 2) * 100)
-    round(percentage, 2)
-    data = [
-        ["Total", total, "out of 280", "or", str(percentage) + r"%",
-         "conflicts with leveraged perspective", str(100 - percentage) + r"% aligned with a leveraged perspective."]]
-    table = Table(data, rowHeights=.16 * inch)
-    table.wrapOn(p, 9 * inch, .16 * inch)
-    table.drawOn(p, 0, .56 * inch)
-
-    # right half of page 6
-    p.drawString(5.25 * inch, 8.5 * inch, "Intersectional Data: Total Points Across All Sociocultural Locations")
-    data = [
-        ["", "religion", "disability", "ethnicity", "gender", "race", "class", "lgbtq+"],
-        ["sensitivity", score.Religion_Score.sensitivity, score.Disability_Score.sensitivity,
-         score.Culture_Score.sensitivity, score.Gender_Score.sensitivity,
-         score.Race_Score.sensitivity, score.Class_Score.sensitivity, score.Sexual_Orientation_Score.sensitivity],
-        ["oneness", score.Religion_Score.oneness, score.Disability_Score.oneness, score.Culture_Score.oneness,
-         score.Gender_Score.oneness,
-         score.Race_Score.oneness, score.Class_Score.oneness, score.Sexual_Orientation_Score.oneness],
-        ["strength", score.Religion_Score.strength, score.Disability_Score.strength, score.Culture_Score.strength,
-         score.Gender_Score.strength,
-         score.Race_Score.strength, score.Class_Score.strength, score.Sexual_Orientation_Score.strength],
-        ["appreciation", score.Religion_Score.appreciation, score.Disability_Score.appreciation,
-         score.Culture_Score.appreciation, score.Gender_Score.appreciation,
-         score.Race_Score.appreciation, score.Class_Score.appreciation, score.Sexual_Orientation_Score.appreciation],
-        ["leveraged", score.Religion_Score.leveraged, score.Disability_Score.leveraged, score.Culture_Score.leveraged,
-         score.Gender_Score.leveraged,
-         score.Race_Score.leveraged, score.Class_Score.leveraged, score.Sexual_Orientation_Score.leveraged]
-    ]
-    table = Table(data, rowHeights=.16 * inch)
-    table.wrapOn(p, 5.25 * inch, 1.44 * inch)
-    table.drawOn(p, 5.25 * inch, 7.24 * inch)
 
     # radar chart
     d = Drawing(5.25 * inch, 2.8 * inch)
     spider = SpiderChart()
-    spider.width = 3.5 * inch
-    spider.height = 2.5 * inch
+    spider.width = 1.1 * inch
+    spider.height = 1.5 * inch
 
     spider.labels = ["leveraged", "sensitivity", "oneness", "appreciation", "strength"]
     spider.data = [
@@ -1272,178 +605,201 @@ def generate_pdf(item, called_from_admin_site):
 
     # legend for radar graph
     legend = Legend()
-    legend.x = -1.2 * inch
-    legend.y = 2.2 * inch
+    legend.x = -1.4 * inch
+    legend.y = 1.3 * inch
     legend.columnMaximum = 7
     legend.boxAnchor = 'nw'
+    legend.dx = 5  # Width between color boxes and labels
+    legend.dy = 5  # Height between color boxes and labels
+    legend.deltay = 7  # Height of each legend entry
+    legend.autoXPadding = 0  # Padding around the legend
+    legend.yGap = 0  # Vertical gap between legend entries
+    legend.dxTextSpace = 5  # Space between color box and text
     cols = [colors.blue, colors.red, colors.green, colors.purple, colors.turquoise, colors.orange, colors.blueviolet]
-    categories = ("Religion", "Disability", "Culture", "Gender", "Race", "Class", "Sexual Orientation")
+    categories = ("Religion", "Disability", "Culture", "Gender", "Race", "Class", "Sexual Orient.")
     legend.colorNamePairs = list(zip(cols, categories))
     d.add(legend)
 
-    renderPDF.draw(d, p, 6.75 * inch, 4.5 * inch, showBoundary=False)
+    renderPDF.draw(d, p, 260, 6.1 * inch, showBoundary=False)
 
     # bar graph of unacknowledged power quotient
+    leveraged_difference = 56 - score.leveraged_total
+    total = score.sensitivity_total + score.oneness_total + score.strength_total + score.appreciation_total + leveraged_difference
+    percentage = int(round((float(total) / float(280)), 2) * 100)
+    round(percentage, 2)
     d = Drawing(5.25 * inch, 2.8 * inch)
     data = [
         [percentage],
         [100 - percentage]
     ]
+    # bc = HorizontalBarChart3D()
     bc = HorizontalBarChart()
     bc.data = data
-    bc.fillColor = colors.white
     bc.strokeColor = colors.black
     bc.valueAxis.valueMin = 0
     bc.valueAxis.valueMax = 100
     bc.valueAxis.valueStep = 10
     bc.barWidth = .1 * inch
-    bc.width = 4.5 * inch
-    bc.height = 1.5 * inch
+    bc.width = 2.3 * inch
+    bc.height = 0.6 * inch
+    # bc.zDepth = 0.04 * inch
     bc.barLabelArray = [
         str(percentage) + r"%",
         str(100 - percentage) + r"%"
     ]
     bc.barLabelFormat = "%s"
     bc.barLabels.fontName = 'Helvetica-Bold'
-    bc.barLabels.fontSize = 18
+    bc.barLabels.fontSize = 13
     # centers labels within respective bars
-    bc.barLabels[0].dx = -4.5 * float(percentage / 200) * inch
-    bc.barLabels[1].dx = -4.5 * float((100 - percentage) / 200) * inch
-    bc.bars[0].fillColor = colors.lightgrey
-    bc.bars[1].fillColor = colors.darkgrey
+    bc.barLabels[0].dx = -2.5 * float(percentage / 200) * inch
+    bc.barLabels[1].dx = -2.5 * float((100 - percentage) / 200) * inch
+    bc.bars[0].fillColor = HexColor("#7CA04F")
+    bc.bars[1].fillColor = HexColor("#5589B6")
     bc.categoryAxis.style = 'stacked'
     d.add(bc)
-    renderPDF.draw(d, p, 5.1 * inch, 1.5 * inch, showBoundary=False)
+    renderPDF.draw(d, p, 365, 6.6 * inch, showBoundary=False)
+
     # title for unacknowledged power quotient chart
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(5.5 * inch, 3.75 * inch, "* Unknown/Unacknowledged Power Quotient")
+    p.setFont("Helvetica-Bold", 7)
+    p.drawString(5.4 * inch, 7.4 * inch, "* Unknown/Unacknowledged Power Quotient")
 
-    p.showPage()
+    # Set the dimensions of the rectangle
+    x = 5.5 * inch
+    y = 5.9 * inch
+    width = 2 * inch
+    height = 0.6 * inch
 
-    # page 5 - point calculation table
-    p.translate(inch, inch)
-    
-    # utility to track which column is currently being edited
-    column_num = 0
+    # Draw the rectangle
+    p.rect(x, y, width, height)
 
-    # totals for far right column
+    header_par1 = ParagraphStyle(
+        'header_par1',
+        parent=pstyle,
+        fontSize=10,
+        fontName="Helvetica",
+        alignment=TA_LEFT,
+        leading=17
+    )
+    # Create the paragraph text dynamically
+    remaining_percentage = 100 - percentage
+    par_text = f'''{percentage}% conflicts, {remaining_percentage}% is aligned <br/>with a Leveraged Perspective.'''
+    # Create the paragraph
+    par1 = Paragraph(par_text, header_par1)
+    # par1 = Paragraph("""33% conflicts, 67% is aligned, <br/>with a Leveraged Perspective.""", header_par1)
+    par1.wrapOn(p, 10 * inch, 3 * inch)
+    par1.drawOn(p, 400, 430)
 
-    # create a table for each social_location, left to right
-    for location in locations:
-        # table data, to be appended to.  Starts with header
-        data = [[location],
-                ["", "mr", "mrp"]]
-        # merge first row columns
-        style = TableStyle([
-            ('SPAN', (0, 0), (2, 0)),
-        ])
-        se_loc_total = 0
-        o_loc_total = 0
-        s_loc_total = 0
-        a_loc_total = 0
-        l_loc_total = 0
-        # utility to multiply number of responses by point value
-        # decremented at end of loop
-        multiplier = 4
-        # utility to see what index to add to in totals lists
-        # incremented at end of loop
-        response_num = 0  # 0 = a, 1 = b, ...
-        for response in responses:
-            data.append([str(multiplier) + " points"])
-            # count the number of responses for each perspective matching the current response
-            se = Response.objects.filter(assessment=assessment, power_perspective="Sensitivity", response=response,
-                                         sociocultural_location=location).count()
-            o = Response.objects.filter(assessment=assessment, power_perspective="Oneness", response=response,
-                                        sociocultural_location=location).count()
-            s = Response.objects.filter(assessment=assessment, power_perspective="Strength", response=response,
-                                        sociocultural_location=location).count()
-            a = Response.objects.filter(assessment=assessment, power_perspective="Appreciation", response=response,
-                                        sociocultural_location=location).count()
-            l = Response.objects.filter(assessment=assessment, power_perspective="Leveraged", response=response,
-                                        sociocultural_location=location).count()
-            # multiply by number of points for this response
-            # append totals to data, i.e. add a row
-            total = multiplier * (se + o + s + a + l)
-            data.append(['se', se, se * multiplier])
-            data.append(['o', o, o * multiplier])
-            data.append(['s', s, s * multiplier])
-            data.append(['a', a, a * multiplier])
-            data.append(['l', l, l * multiplier])
-            data.append(['', 'total', total])
+    # religion graph
+    religion_drawing = Drawing(3 * inch, 2 * inch)
+    religion_data = [
+        (religion_score.sensitivity, religion_score.oneness, religion_score.strength, religion_score.appreciation,
+         religion_score.leveraged)
+    ]
+    religion = generate_graph(width=2, height=1.5)
+    religion.data = religion_data
+    religion_title = String(1 * inch, 1.4 * inch, "Religion", textAnchor='middle')
+    religion_title.fontName = 'Times-Bold'
+    religion_title.fontSize = 10
+    religion_drawing.add(religion_title)
+    religion_drawing.add(religion)
+    renderPDF.draw(religion_drawing, p, 0.8, 4 * inch, showBoundary=False)
 
-            # add to totals for this location
-            se_loc_total += se * multiplier
-            o_loc_total += o * multiplier
-            s_loc_total += s * multiplier
-            a_loc_total += a * multiplier
-            l_loc_total += l * multiplier
+    # disability graph
+    disability_drawing = Drawing(3 * inch, 2 * inch)
+    disability_data = [
+        (disability_score.sensitivity, disability_score.oneness, disability_score.strength,
+         disability_score.appreciation, disability_score.leveraged)
+    ]
+    disability = generate_graph(width=2, height=1.5)
+    disability.data = disability_data
+    disability_title = String(1 * inch, 1.4 * inch, "Disability", textAnchor='middle')
+    disability_title.fontName = 'Times-Bold'
+    disability_title.fontSize = 10
+    disability_drawing.add(disability_title)
+    disability_drawing.add(disability)
+    renderPDF.draw(disability_drawing, p, 200, 4 * inch, showBoundary=False)
 
-            # decrement multiplier and increment response_num
-            multiplier -= 1
-            response_num += 1
+    # culture graph
+    culture_drawing = Drawing(3 * inch, 2 * inch)
+    culture_data = [
+        (culture_score.sensitivity, culture_score.oneness, culture_score.strength, culture_score.appreciation,
+         culture_score.leveraged)
+    ]
+    culture = generate_graph(width=2, height=1.5)
+    culture.data = culture_data
+    culture_title = String(1 * inch, 1.4 * inch, "Culture", textAnchor='middle')
+    culture_title.fontName = 'Times-Bold'
+    culture_title.fontSize = 10
+    culture_drawing.add(culture_title)
+    culture_drawing.add(culture)
+    renderPDF.draw(culture_drawing, p, 400, 4 * inch, showBoundary=False)
 
-        # totals at bottom of table
-        data.append([location, "", "pts"])
+    # gender graph
+    gender_drawing = Drawing(3 * inch, 2 * inch)
+    gender_data = [
+        (gender_score.sensitivity, gender_score.oneness, gender_score.strength, gender_score.appreciation,
+         gender_score.leveraged)
+    ]
+    gender = generate_graph(width=2, height=1.5)
+    gender.data = gender_data
+    gender_title = String(1 * inch, 1.4 * inch, "Gender", textAnchor='middle')
+    gender_title.fontName = 'Times-Bold'
+    gender_title.fontSize = 10
+    gender_drawing.add(gender_title)
+    gender_drawing.add(gender)
+    renderPDF.draw(gender_drawing, p, 0.8, 1.8 * inch, showBoundary=False)
 
-        data.append(["sensitivity", "", se_loc_total])
-        data.append(["oneness", "", o_loc_total])
-        data.append(["strength", "", s_loc_total])
-        data.append(["appreciation", "", a_loc_total])
-        data.append(["leveraged", "", l_loc_total])
+    # race graph
+    race_drawing = Drawing(3 * inch, 2 * inch)
+    race_data = [
+        (race_score.sensitivity, race_score.oneness, race_score.strength, race_score.appreciation,
+         race_score.leveraged)
+    ]
+    race = generate_graph(width=2, height=1.5)
+    race.data = race_data
+    race_title = String(1 * inch, 1.4 * inch, "Race", textAnchor='middle')
+    race_title.fontName = 'Times-Bold'
+    race_title.fontSize = 10
+    race_drawing.add(race_title)
+    race_drawing.add(race)
+    renderPDF.draw(race_drawing, p, 200, 1.8 * inch, showBoundary=False)
 
-        # merge cells in totals rows
-        style.add('SPAN', (0, -6), (1, -6))
-        style.add('SPAN', (0, -5), (1, -5))
-        style.add('SPAN', (0, -4), (1, -4))
-        style.add('SPAN', (0, -3), (1, -3))
-        style.add('SPAN', (0, -2), (1, -2))
-        style.add('SPAN', (0, -1), (1, -1))
+    # class graph
+    class_drawing = Drawing(3 * inch, 2 * inch)
+    class_data = [
+        (class_score.sensitivity, class_score.oneness, class_score.strength, class_score.appreciation,
+         class_score.leveraged)
+    ]
+    class_graph = generate_graph(width=2, height=1.5)
+    class_graph.data = class_data
+    class_title = String(1 * inch, 1.4 * inch, "Class", textAnchor='middle')
+    class_title.fontName = 'Times-Bold'
+    class_title.fontSize = 10
+    class_drawing.add(class_title)
+    class_drawing.add(class_graph)
+    renderPDF.draw(class_drawing, p, 400, 1.8 * inch, showBoundary=False)
 
-        # add outline to table
-        style.add('BOX', (0, 0), (-1, -1), 2, colors.black),
-        # add colors for point header rows
-        style.add('BACKGROUND', (0, 2), (-1, 2), colors.yellow)
-        style.add('BACKGROUND', (0, 9), (-1, 9), colors.green)
-        style.add('BACKGROUND', (0, 16), (-1, 16), colors.purple)
-        style.add('BACKGROUND', (0, 23), (-1, 23), colors.HexColor("#EC491E"))
-        style.add('BACKGROUND', (0, 30), (-1, 30), colors.HexColor("#4E89D9"))
-        # add lines to divide headers
-        style.add('LINEABOVE', (0, 37), (-1, 37), 1, colors.black)
-        style.add('LINEABOVE', (0, 2), (-1, 2), 1, colors.black)
+    # sexual orientation graph
+    sexual_orientation_drawing = Drawing(3 * inch, 2 * inch)
+    sexual_orientation_data = [
+        (sexual_orientation_score.sensitivity, sexual_orientation_score.oneness, sexual_orientation_score.strength,
+         sexual_orientation_score.appreciation, sexual_orientation_score.leveraged)
+    ]
+    sexual_orientation_graph = generate_graph(width=2, height=1.5)
+    sexual_orientation_graph.data = sexual_orientation_data
+    sexual_orientation_title = String(1 * inch, 1.4 * inch, "Sexual Orientation", textAnchor='middle')
+    sexual_orientation_title.fontName = 'Times-Bold'
+    sexual_orientation_title.fontSize = 10
+    sexual_orientation_drawing.add(sexual_orientation_title)
+    sexual_orientation_drawing.add(sexual_orientation_graph)
+    renderPDF.draw(sexual_orientation_drawing, p, 0, -0.4 * inch, showBoundary=False)
 
-        # make a table - one table for each social location, pushed together to look like columns
-        table = Table(data, colWidths=.4266 * inch, rowHeights=.18 * inch)
-        table.setStyle(style)
-        table.wrapOn(p, 1.28 * inch, 8.5 * inch)
-        table.drawOn(p, 1.28 * column_num * inch, -.5 * inch)
-        column_num += 1
+    p.setFont("Helvetica", 11)
+    txtexample = "Examples of graphs showing completely “integrated” or “leveraged” results:"
+    p.drawString(2.5 * inch, 1 * inch, txtexample)
 
-    # totals column on far right
-    data = [[""],
-            ["pttl"]]
-    for i in range(0, 5):
-        data.append([""])  # response line
-        data.append([se_totals[i]])
-        data.append([o_totals[i]])
-        data.append([s_totals[i]])
-        data.append([a_totals[i]])
-        data.append([l_totals[i]])
-        data.append([""])  # total line
-    data.append(["total"])
-    # sums all totals from every location
-    data.append([sum(se_totals)])
-    data.append([sum(o_totals)])
-    data.append([sum(s_totals)])
-    data.append([sum(a_totals)])
-    data.append([sum(l_totals)])
-    table = Table(data, colWidths=.4266 * inch, rowHeights=.18 * inch)
-    style = TableStyle([
-        ('BOX', (0, 0), (-1, -1), 2, colors.black)
-    ])
-    table.setStyle(style)
-    table.wrapOn(p, .4266 * inch, 8.5 * inch)
-    table.drawOn(p, 8.96 * inch, -.5 * inch)
-    p.showPage()
+    # p.drawInlineImage("pda/examples_graph.jpg", 200, -0.9 * inch, 300, 130)
+    p.drawInlineImage(pdf_static_path("core/img/examples_graph.jpg"), 200, -0.9*inch, 300, 130)
 
     # finalizes PDF
     p.save()
@@ -1456,24 +812,21 @@ def generate_pdf(item, called_from_admin_site):
     assessment.save()
     # PDF generation ends here
 
-    # only actually send email when someone takes the assessment (called_from_admin_site should be False)
-    if (called_from_admin_site == False):
+    # Send results only for a normal participant completion.
+    if called_from_admin_site == False:
         group_users = CoreGroupuser.objects.filter(
             user=assessment.user,
-            assessment=assessment
+            assessment=assessment,
         )
 
         if len(group_users) > 0:
-            # group participants contribute to the anonymous cohort report
-            # and do not continue through the normal individual-results email path
+            # Group participants contribute to the anonymous cohort report
+            # and do not receive the normal individual-results email.
             group_result(item)
             return False
 
-        # environment variable for email toggle... always sends emails unless SEND_PDF_EMAIL env var is set to OFF
-        if (settings.SEND_PDF_EMAIL != "OFF"):
+        if settings.SEND_PDF_EMAIL != "OFF":
             user = assessment.user
-            # the below code should email the pdf results to the user and admin
-            # setup what templates to use
             email_template = 'core/pdf_email_plain.html'
             html_email_template = 'core/pdf_email.html'
 
@@ -1481,70 +834,106 @@ def generate_pdf(item, called_from_admin_site):
                 'abstract_user': user,
             }
 
-            # fill the email with content
             mail_subject = "PDA Results"
-            text_content = render_to_string(email_template, template_context)
-            html_content = render_to_string(html_email_template, template_context)
-            # bcc it to the admin email
-            email = EmailMultiAlternatives(mail_subject, text_content, settings.FROM_EMAIL, to=[user.email],
-                                        bcc=[settings.BCC_EMAIL])
+            text_content = render_to_string(
+                email_template,
+                template_context,
+            )
+            html_content = render_to_string(
+                html_email_template,
+                template_context,
+            )
+
+            email = EmailMultiAlternatives(
+                mail_subject,
+                text_content,
+                settings.FROM_EMAIL,
+                to=[user.email],
+                bcc=[settings.BCC_EMAIL],
+            )
             email.attach_alternative(html_content, "text/html")
-            # attach PDF to email
-            email.attach(naming, pdf, 'application/pdf')
-            # send it
+
+            pdm_path = pdf_static_path("core/pdf/PDM_Summary.pdf")
+            with open(pdm_path, 'rb') as f:
+                pdm_content = f.read()
+
+            email.attach(
+                'PDM_Summary.pdf',
+                pdm_content,
+                'application/pdf',
+            )
+            email.attach(
+                naming,
+                pdf,
+                'application/pdf',
+            )
             email.send()
 
-    # return False (no issues) to admin if we get here in admin site
-    if (called_from_admin_site == True):
+    if called_from_admin_site == True:
         return False
 
 
 # sets base values for bar graph
-def generate_total_graph():
+def generate_total_graph(width, height):
     from reportlab.graphics.charts.barcharts import VerticalBarChart
     from reportlab.lib import colors
     from reportlab.lib.units import inch
 
+    # bc = VerticalBarChart3D()
     bc = VerticalBarChart()
     bc.x = 0
     bc.y = 0
-    bc.height = 1.8 * inch      # graph height
-    bc.width = 2.8 * inch       # graph width
-    bc.fillColor = colors.white
-    bc.barLabelFormat = '%s'   
-    bc.barLabels.nudge = 10     # moves bar labels up a bit
-    bc.strokeColor = colors.black   
-    bc.valueAxis.valueMin = 0   
+    # bc.zDepth = 0.05 * inch  # "3D-ness of graph"
+    # bc.height = 1.8 * inch  # graph height
+    # bc.width = 2.8 * inch  # graph width
+    bc.height = height * inch  # graph height
+    bc.width = width * inch  # graph width
+    bc.barLabelFormat = '%s'
+    bc.barLabels.nudge = 10  # moves bar labels up a bit
+    bc.strokeColor = colors.black
+    bc.bars[(0, 0)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 1)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 2)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 3)].fillColor = colors.HexColor('#7CA04F')
+    bc.bars[(0, 4)].fillColor = colors.HexColor('#664A7E')
+    bc.valueAxis.valueMin = 0
     bc.valueAxis.valueMax = 60
-    bc.valueAxis.valueStep = 10 # distance between gridlines
+    bc.valueAxis.valueStep = 10  # distance between gridlines
     bc.valueAxis.visibleGrid = 1  # makes grid visible.  Set to 0 to turn off  
-    bc.categoryAxis.labels.boxAnchor = 'nw' 
-    bc.categoryAxis.labels.dx = -30 # moves the x axis labels left a bit
-    bc.categoryAxis.labels.dy = -35 # moves the x axis lables down a bit
-    bc.categoryAxis.labels.angle = 45   # angle of text in labels
-    bc.categoryAxis.categoryNames = ['Sensitivity', 'Oneness', 'Strength', 'Appreciation', 'Leveraged'] # names of x axis categories
+    bc.categoryAxis.labels.boxAnchor = 'nw'
+    bc.categoryAxis.labels.dx = -30  # moves the x axis labels left a bit
+    bc.categoryAxis.labels.dy = -35  # moves the x axis lables down a bit
+    bc.categoryAxis.labels.angle = 45  # angle of text in labels
+    bc.categoryAxis.categoryNames = ['Sensitivity', 'Oneness', 'Strength', 'Appreciation',
+                                     'Leveraged']  # names of x axis categories
 
     return bc
 
 
-def generate_graph():
+def generate_graph(width, height):
     from reportlab.graphics.charts.barcharts import VerticalBarChart
     from reportlab.lib import colors
-    from reportlab.lib.colors import Color
     from reportlab.lib.units import inch
 
+    # bc = VerticalBarChart3D()
     bc = VerticalBarChart()
     bc.x = 0
     bc.y = 0
-    bc.height = 1.8 * inch
-    bc.width = 2.8 * inch
-    bc.fillColor = colors.white
+    # bc.zDepth = 0.05 * inch
+    # bc.height = 1.8 * inch
+    # bc.width = 2.8 * inch
+    bc.height = height * inch  # graph height
+    bc.width = width * inch  # graph width
     bc.strokeColor = colors.black
-    bc.bars[0].fillColor = Color(100, 0, 0, alpha=.3)
+    bc.bars[(0, 0)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 1)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 2)].fillColor = colors.HexColor('#5288B8')
+    bc.bars[(0, 3)].fillColor = colors.HexColor('#7CA04F')
+    bc.bars[(0, 4)].fillColor = colors.HexColor('#664A7E')
     bc.barLabelFormat = '%s'
     bc.barLabels.nudge = 10
     bc.valueAxis.valueMin = 0
-    bc.valueAxis.valueMax = 8
+    bc.valueAxis.valueMax = 9
     bc.valueAxis.valueStep = 1
     bc.valueAxis.visibleGrid = 1
     bc.categoryAxis.labels.boxAnchor = 'nw'
@@ -1556,6 +945,8 @@ def generate_graph():
 
 
 # utility function to turn response into letter
+
+
 def get_response_letter(s):
     if s == "strongly agree":
         return "a"
