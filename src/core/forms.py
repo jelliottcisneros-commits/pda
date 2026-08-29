@@ -113,7 +113,7 @@ class ConsultantCreationForm(ModelForm):
         try:
             validator(username)  # ensure the username is valid unicode
         except ValidationError:
-            username = get_random_string()  # if not generate a random one that is valid
+            username = get_random_string(length=12)  # if not generate a random one that is valid
         while not is_username_unique_among_consultants(username):
             username += get_random_string(
                 length=1)  # trying to make it unique while not going too far from the original
@@ -159,7 +159,7 @@ class ViewOnlyAdminCreationForm(ModelForm):
         try:
             validator(username)  # ensure the username is valid unicode
         except ValidationError:
-            username = get_random_string()  # if not generate a random one that is valid
+            username = get_random_string(length=12)  # if not generate a random one that is valid
         while not is_username_unique_among_view_only_admins(username):
             username += get_random_string(
                 length=1)  # trying to make it unique while not going too far from the original
