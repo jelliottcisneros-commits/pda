@@ -144,12 +144,16 @@ USE_LOCAL_POSTGRES = env_bool('USE_LOCAL_POSTGRES', default=False)
 if IS_PRODUCTION:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env('RDS_DB_NAME'),
-            'USER': env_first('RDS_USERNAME', 'RDS_USER'),
-            'PASSWORD': env_first('RDS_PASSWORD', 'PRODUCTION_DB_PASSWORD'),
-            'HOST': env_first('RDS_HOSTNAME', 'RDS_HOST'),
-            'PORT': env('RDS_PORT'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env_first('PGDATABASE', 'RDS_DB_NAME'),
+            'USER': env_first('PGUSER', 'RDS_USERNAME', 'RDS_USER'),
+            'PASSWORD': env_first(
+                'PGPASSWORD',
+                'RDS_PASSWORD',
+                'PRODUCTION_DB_PASSWORD',
+            ),
+            'HOST': env_first('PGHOST', 'RDS_HOSTNAME', 'RDS_HOST'),
+            'PORT': env_first('PGPORT', 'RDS_PORT', default='5432'),
         }
     }
 elif USE_LOCAL_POSTGRES:
