@@ -259,29 +259,36 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if IS_PRODUCTION:
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-    DEFAULT_FILE_STORAGE = 'TheSum.storage_backends.StaticStorage'
+    AWS_ACCESS_KEY_ID = env_first('ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env_first(
+        'SECRET_ACCESS_KEY',
+        'AWS_SECRET_ACCESS_KEY',
+    )
+    AWS_STORAGE_BUCKET_NAME = env_first(
+        'BUCKET',
+        'AWS_STORAGE_BUCKET_NAME',
+    )
+    AWS_S3_REGION_NAME = env_first(
+        'REGION',
+        'AWS_S3_REGION_NAME',
+        default='auto',
+    )
+    AWS_S3_ENDPOINT_URL = env_first(
+        'ENDPOINT',
+        'AWS_S3_ENDPOINT_URL',
+        default=None,
+    )
+    AWS_S3_ADDRESSING_STYLE = env(
+        'AWS_S3_ADDRESSING_STYLE',
+        default='virtual',
+    )
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
     AWS_DEFAULT_ACL = 'private'
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
+    AWS_QUERYSTRING_AUTH = True
 
-    # s3 static settings
-    # AWS_LOCATION = 'static'
-    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-    # s3 public media settings
-    PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-
-    # s3 private media settings
     PRIVATE_MEDIA_LOCATION = 'private'
     PRIVATE_FILE_STORAGE = 'TheSum.storage_backends.PrivateMediaStorage'
 else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     MEDIA_URL = '/media/'
 
 LOGGING = {
