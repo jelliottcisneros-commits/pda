@@ -104,6 +104,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'core.middleware.RequiredDataMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -256,6 +257,16 @@ PAYPAL_RECIEVER_EMAIL = PAYPAL_RECEIVER_EMAIL
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if IS_PRODUCTION:
@@ -322,7 +333,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', defa
 SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', default=False)
 SECURE_CONTENT_TYPE_NOSNIFF = env_bool('SECURE_CONTENT_TYPE_NOSNIFF', default=True)
 SECURE_BROWSER_XSS_FILTER = env_bool('SECURE_BROWSER_XSS_FILTER', default=True)
-X_FRAME_OPTIONS = env('X_FRAME_OPTIONS', default='SAMEORIGIN')
+X_FRAME_OPTIONS = env('X_FRAME_OPTIONS', default='DENY')
 SECURE_REFERRER_POLICY = env('SECURE_REFERRER_POLICY', default='same-origin')
 
 if env_bool('USE_X_FORWARDED_PROTO', default=IS_PRODUCTION):
