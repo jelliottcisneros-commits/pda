@@ -310,10 +310,18 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'logging.NullHandler',
         },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
     },
     'loggers': {
         'django.security.DisallowedHost': {
             'handlers': ['null'],
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
             'propagate': False,
         },
     }
