@@ -1317,7 +1317,7 @@ class ClearSessionView(View):
 def custom_server_error(request):
     if not settings.DEBUG:
         logger = logging.getLogger(__name__)
-        logger.error(INTERNAL_SERVER_ERROR_LOG_MESSAGE)  # This will help with
+        logger.exception(INTERNAL_SERVER_ERROR_LOG_MESSAGE)  # This will help with
     # filtering 500 errors when DEBUG is False
     return server_error(request, template_name='core/500.html')
 
