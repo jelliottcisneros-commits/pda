@@ -1,0 +1,912 @@
+[
+{
+  "model": "core.question",
+  "pk": 1,
+  "fields": {
+    "number": 1,
+    "title": "I'm not sure how to respect other religions/worldviews while valuing the the truth of my own…there can only be one truth right?",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 2,
+  "fields": {
+    "number": 2,
+    "title": "If I'm honest, I can tell you that some religions are really ridiculous.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 3,
+  "fields": {
+    "number": 3,
+    "title": "There are many paths to the truth.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 4,
+  "fields": {
+    "number": 4,
+    "title": "Talking about different religions just causes conflict--we just need to look beyond our differences to our common humanity.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 5,
+  "fields": {
+    "number": 5,
+    "title": "I value the spirituality of people from of a particular religion/worldview that I know about, more than my own.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 6,
+  "fields": {
+    "number": 6,
+    "title": "I can feel uncomfortable around people with disabilities--not sure what to do or say or where to look!",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 7,
+  "fields": {
+    "number": 7,
+    "title": "People with disabilities have it together more than everybody else… more hardship and prejudice.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 8,
+  "fields": {
+    "number": 8,
+    "title": "Too much money, resources, and attention is paid to people with disabilities.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 9,
+  "fields": {
+    "number": 9,
+    "title": " I don't see people with disabilities, I just see people.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 10,
+  "fields": {
+    "number": 10,
+    "title": "Having a disability in our society would be challenging--so many physical and cultural barriers.  ",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 11,
+  "fields": {
+    "number": 11,
+    "title": "People are the same no matter cultural background.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 12,
+  "fields": {
+    "number": 12,
+    "title": "I sometimes worry about offending people from different cultures.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 13,
+  "fields": {
+    "number": 13,
+    "title": "I know specific other cultures that have it together better than we do!",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 14,
+  "fields": {
+    "number": 14,
+    "title": "I know a lot about cultures and ours is the best.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 15,
+  "fields": {
+    "number": 15,
+    "title": "Cultural conflicts are everywhere: radio, t.v., at work--around the world!",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 16,
+  "fields": {
+    "number": 16,
+    "title": "I get confused about what men and women are, it's so hard to separate from societies' expectations.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 17,
+  "fields": {
+    "number": 17,
+    "title": "Men should act like men and women like women.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 18,
+  "fields": {
+    "number": 18,
+    "title": "Society holds us all in such narrow boxes around gender…only 2 choices: women (valued for how they look) and men (valued for wealth and power).",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 19,
+  "fields": {
+    "number": 19,
+    "title": "We shouldn't focus on our gender differences but on how we're the same.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 20,
+  "fields": {
+    "number": 20,
+    "title": "I really get how my gender is inferior.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 21,
+  "fields": {
+    "number": 21,
+    "title": "Race and racism are huge issues in our country and  it's important to me to learn to talk about them in meaningful ways.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 22,
+  "fields": {
+    "number": 22,
+    "title": "I believe talking about racism is important to do but it feels really uncomfortable.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 23,
+  "fields": {
+    "number": 23,
+    "title": "Talking about race reinforces racism...people should focus on personal relationships.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 24,
+  "fields": {
+    "number": 24,
+    "title": "There are races I admire more than my own.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 25,
+  "fields": {
+    "number": 25,
+    "title": "Racism isn't a significant issue anymore…we've had a Black president.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 26,
+  "fields": {
+    "number": 26,
+    "title": "The tools are there for poor people to make it--if they really want to.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 27,
+  "fields": {
+    "number": 27,
+    "title": "I'm unsure--I worked hard to get what I have but I don't want to think this comes on the backs of others.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 28,
+  "fields": {
+    "number": 28,
+    "title": "Corporatocracy and consolidation of wealth at the very top threatens democracy.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 29,
+  "fields": {
+    "number": 29,
+    "title": "It doesn't matter how much money a person has, we're all human beings.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 30,
+  "fields": {
+    "number": 30,
+    "title": "I feel sorry for poor people….they work harder than everyone else.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 31,
+  "fields": {
+    "number": 31,
+    "title": "As long as people don’t throw it in other people’s faces, what they do in their own house is none of my business.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": "Strength",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 32,
+  "fields": {
+    "number": 32,
+    "title": "Sexual orientation is a rich and important part of our diverse world.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 33,
+  "fields": {
+    "number": 33,
+    "title": "It's important to separate people from their behavior, we're all just people.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 34,
+  "fields": {
+    "number": 34,
+    "title": "People who are gay are awesome--better than straight people.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": "Appreciation",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 35,
+  "fields": {
+    "number": 35,
+    "title": "I can feel kind of stuck around LGBTQ issues because I don't want to say the wrong thing or make anyone uncomfortable.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 36,
+  "fields": {
+    "number": 36,
+    "title": "White people have a lot of power and privilege that is helpful to acknowledge.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 37,
+  "fields": {
+    "number": 37,
+    "title": "I don't see color--I just see people.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 38,
+  "fields": {
+    "number": 38,
+    "title": "I sometimes worry about offending people when I'm with people from a different race.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 39,
+  "fields": {
+    "number": 39,
+    "title": "People need to stop acting like victims around race.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 40,
+  "fields": {
+    "number": 40,
+    "title": "Sometimes I wish I were another race.",
+    "sociocultural_location": "Race",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 41,
+  "fields": {
+    "number": 41,
+    "title": "I feel stuck sometimes…like I should do more to help others who are less fortunate.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": "Sensitivity",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 42,
+  "fields": {
+    "number": 42,
+    "title": "Society gives some of us a little extra help--unspoken benefits that have been helpful for me to become more aware of.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 43,
+  "fields": {
+    "number": 43,
+    "title": "Talking about money just causes trouble--we need to look beyond that.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": "Oneness",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 44,
+  "fields": {
+    "number": 44,
+    "title": "So many people are just looking for a handout.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 45,
+  "fields": {
+    "number": 45,
+    "title": "Poor people are good people.",
+    "sociocultural_location": "Class",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": "Appreciation",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 46,
+  "fields": {
+    "number": 46,
+    "title": "The other end of the gender spectrum from me,  I think, has it together more.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": "Appreciation",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 47,
+  "fields": {
+    "number": 47,
+    "title": "I feel torn because I don't want to perpetuate limiting gender roles, yet, a part of me loves them and they make sense to me.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 48,
+  "fields": {
+    "number": 48,
+    "title": "Conflict about gender can be resolved if we recognize our common humanity.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": "Oneness",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 49,
+  "fields": {
+    "number": 49,
+    "title": "I intend to be a safe person for myself and others to explore and find what matters around gender.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 50,
+  "fields": {
+    "number": 50,
+    "title": "People should stop whining about gender--everyone is a victim.",
+    "sociocultural_location": "Gender",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": "Strength",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 51,
+  "fields": {
+    "number": 51,
+    "title": "Focusing on cultural differences just causes problems.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 52,
+  "fields": {
+    "number": 52,
+    "title": "I can feel a little frozen because I don't want to say or do the wrong thing when I'm with someone from a different culture.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 53,
+  "fields": {
+    "number": 53,
+    "title": "I love learning about and shifting codes between cultural groups.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 54,
+  "fields": {
+    "number": 54,
+    "title": "Our culture is the best in the world.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 55,
+  "fields": {
+    "number": 55,
+    "title": "I know some other cultures that are better than ours.",
+    "sociocultural_location": "Culture",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 56,
+  "fields": {
+    "number": 56,
+    "title": "I couldn’t work with people with disabilities.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 57,
+  "fields": {
+    "number": 57,
+    "title": "People with Down's Syndrome are so wonderful.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 58,
+  "fields": {
+    "number": 58,
+    "title": "Society is like a pyramid with stairs, the top is intended to only be accessible to some.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 59,
+  "fields": {
+    "number": 59,
+    "title": "I'm confused because I don't think it's right to feel pity for people with disabilities but I am really glad I'm able-bodied.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 60,
+  "fields": {
+    "number": 60,
+    "title": "I don't see what's wrong with people--I just see what's right about them.",
+    "sociocultural_location": "Disability",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 61,
+  "fields": {
+    "number": 61,
+    "title": "I am working on my internalized homophobia and transphobia.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 62,
+  "fields": {
+    "number": 62,
+    "title": "I'm a little uncomfortable around these differences myself, but I'm aware of the unfairness in our society.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 63,
+  "fields": {
+    "number": 63,
+    "title": "People choose to be Gay.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": "Strength",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 64,
+  "fields": {
+    "number": 64,
+    "title": "I don't care if people are gay or bi or whatever--we're all just people.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 65,
+  "fields": {
+    "number": 65,
+    "title": "People who are queer are so patient with everyone else.",
+    "sociocultural_location": "LGBQ+",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": "Appreciation",
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 66,
+  "fields": {
+    "number": 66,
+    "title": "I know about a religion/worldview that has a much deeper understanding of life than my own.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Appreciation",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 67,
+  "fields": {
+    "number": 67,
+    "title": "All religions/worldviews have the same core: do unto others as you would have others do unto you.  ",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Oneness",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 68,
+  "fields": {
+    "number": 68,
+    "title": "There are parts of many religion(s)/worldviews with which I may not agree but I understand that people have deep connections to underlying culture, tradition, and spirituality.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Leveraged",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 69,
+  "fields": {
+    "number": 69,
+    "title": "I get confused because it feels like my openness calls into question the legitimacy of my own religion/worldview.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Sensitivity",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+},
+{
+  "model": "core.question",
+  "pk": 70,
+  "fields": {
+    "number": 70,
+    "title": "If I am honest I know my religion/worldview is the truth--definitely more true than other religions/worldviews.",
+    "sociocultural_location": "Religion",
+    "primary_power_perspective": "Strength",
+    "secondary_power_perspective": null,
+    "secondary_demographic_type": null,
+    "secondary_demographic_choice": null
+  }
+}
+]
