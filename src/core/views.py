@@ -252,6 +252,12 @@ def choose_access_type(request, user_id):
 @csrf_exempt
 def payment(request, user_id):
     pdt_obj, failed = process_pdt(request)
+    logging.getLogger(__name__).error(
+        "PayPal PDT return: tx_present=%s failed=%s flag_info=%r",
+        bool(request.GET.get("tx")),
+        failed,
+        getattr(pdt_obj, "flag_info", None),
+    )
     kwargs = dict(user_id=user_id)
     if not failed and is_valid_pdt_payment(pdt_obj, expected_user_id=user_id):
         messages.success(request, "Payment Received")
