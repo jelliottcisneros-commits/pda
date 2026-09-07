@@ -615,6 +615,10 @@ class PayTest(TestCase):
         response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'input type="hidden" name="cmd"')
+        self.assertContains(response, "$47.00")
+        self.assertNotContains(response, "$150.00")
+        self.assertNotContains(response, "$100.00")
+        self.assertNotContains(response, "$50.00")
 
     # CANCELLATION TESTS
     # cancellation of payment will redirect
@@ -639,7 +643,7 @@ class PayTest(TestCase):
 class DummyPaymentTestValid(TestCase):
     def setUp(self):
         # set up some dummy PDT get parameters
-        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": PDA_PRICE, "cc": "EUR",
+        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": PDA_PRICE, "cc": "USD",
                            "cm": "a3e192b8-8fea-4a86-b2e8-d5bf502e36be", "item_number": "",
                            "sig": "blahblahblah"}
 
@@ -677,7 +681,7 @@ class DummyPaymentTestValid(TestCase):
 class DummyPaymentTestInvalidBusiness(TestCase):
     def setUp(self):
         # set up some dummy PDT get parameters
-        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": PDA_PRICE, "cc": "EUR",
+        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": PDA_PRICE, "cc": "USD",
                            "cm": "a3e192b8-8fea-4a86-b2e8-d5bf502e36be", "item_number": "",
                            "sig": "blahblahblah"}
 
@@ -715,7 +719,7 @@ class DummyPaymentTestInvalidBusiness(TestCase):
 class DummyPaymentTestInvalidAmount(TestCase):
     def setUp(self):
         # set up some dummy PDT get parameters
-        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": "750.00", "cc": "EUR",
+        self.get_params = {"tx": "4WJ86550014687441", "st": "Completed", "amt": "150.00", "cc": "USD",
                            "cm": "a3e192b8-8fea-4a86-b2e8-d5bf502e36be", "item_number": "",
                            "sig": "blahblahblah"}
 

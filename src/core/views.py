@@ -37,6 +37,7 @@ from .forms import DemographicForm, ResponseForm, UnverifiedUserForm, UserForm, 
 from .helpers import *
 from .models import *
 from .payments import build_absolute_url, is_valid_pdt_payment
+from .constants import PDA_PRICE
 from .tokens import token_generator_for_abstract_user
 from .utilities import group_result
 
@@ -230,32 +231,19 @@ def choose_access_type(request, user_id):
     payment_kwargs = dict(user_id=user_id)
     paypal_dict = {
         "business": PAYPAL_RECIEVER_EMAIL,
-        "amount": "150.00",
-        "item_name": "Power of Difference Assessment and Consulation",
-        'return_url': build_absolute_url(request, 'core:payment', **payment_kwargs),
-        'cancel_return': build_absolute_url(request, 'core:payment_cancelled', **payment_kwargs),
-        "custom": user_id,
-    }
-    paypal_dict_100 = {
-        "business": PAYPAL_RECIEVER_EMAIL,
-        "amount": "100.00",
-        "item_name": "Power of Difference Assessment and Consulation",
-        'return_url': build_absolute_url(request, 'core:payment', **payment_kwargs),
-        'cancel_return': build_absolute_url(request, 'core:payment_cancelled', **payment_kwargs),
-        "custom": user_id,
-    }
-    paypal_dict_50 = {
-        "business": PAYPAL_RECIEVER_EMAIL,
-        "amount": "50.00",
-        "item_name": "Power of Difference Assessment and Consulation",
-        'return_url': build_absolute_url(request, 'core:payment', **payment_kwargs),
-        'cancel_return': build_absolute_url(request, 'core:payment_cancelled', **payment_kwargs),
+        "amount": f"{PDA_PRICE:.2f}",
+        "currency_code": settings.PAYPAL_CURRENCY,
+        "item_name": "Power of Difference Assessment and Consultation",
+        "return_url": build_absolute_url(request, 'core:payment', **payment_kwargs),
+        "cancel_return": build_absolute_url(request, 'core:payment_cancelled', **payment_kwargs),
         "custom": user_id,
     }
     form = PayPalPaymentsForm(initial=paypal_dict)
-    form100 = PayPalPaymentsForm(initial=paypal_dict_100)
-    form50 = PayPalPaymentsForm(initial=paypal_dict_50)
-    context = {"user_id": user_id, "form": form, "form100": form100, "form50": form50}
+    context = {
+        "user_id": user_id,
+        "form": form,
+        "price": f"{PDA_PRICE:.2f}",
+    }
     return render(request, 'core/choose_access_type.html', context)
 
 
@@ -1317,7 +1305,7 @@ class ClearSessionView(View):
 def custom_server_error(request):
     if not settings.DEBUG:
         logger = logging.getLogger(__name__)
-        logger.exception(INTERNAL_SERVER_ERROR_LOG_MESSAGE)  # This will help with
+        logger.error(INTERNAL_SERVER_ERROR_LOG_MESSAGE)  # This will help with
     # filtering 500 errors when DEBUG is False
     return server_error(request, template_name='core/500.html')
 

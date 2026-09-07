@@ -3,12 +3,10 @@ from decimal import Decimal, InvalidOperation
 from django.conf import settings
 from django.urls import reverse
 
-from .constants import PDA_PRICE, PDA_PRICE2, PDA_PRICE3
+from .constants import PDA_PRICE
 
 VALID_PAYMENT_AMOUNTS = {
     Decimal(str(PDA_PRICE)),
-    Decimal(str(PDA_PRICE2)),
-    Decimal(str(PDA_PRICE3)),
 }
 
 COMPLETED_PAYMENT_STATUSES = {"Completed", "completed", "SUCCESS"}

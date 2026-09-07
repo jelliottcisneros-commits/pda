@@ -252,6 +252,8 @@ else:
     PAYPAL_IDENTITY_TOKEN = "8KqUTP8UCiDAsHh6LeJUsg7D5quIRJu_HvUPa5QtcDNDqy4dCSQaCB8UZ-m"
     PAYPAL_RECEIVER_EMAIL = 'sb-afoqb568566@business.example.com'
 
+PAYPAL_CURRENCY = env('PAYPAL_CURRENCY', default='USD')
+
 # Backward-compatible alias for the legacy misspelled setting used across the app.
 PAYPAL_RECIEVER_EMAIL = PAYPAL_RECEIVER_EMAIL
 
