@@ -2006,3 +2006,18 @@ class AssessmentDetailedViewTest(TestCase):
             reverse('admin:core_assessment_detailed_view', kwargs=dict(assessment_pk=assessment.pk)))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Assessment %s Details" % assessment.pk)
+
+class PayPalPDTEndpointTests(TestCase):
+    @override_settings(PAYPAL_TEST=False)
+    def test_live_pdt_uses_paypal_webscr_endpoint(self):
+        self.assertEqual(
+            PayPalPDT().get_endpoint(),
+            "https://www.paypal.com/cgi-bin/webscr",
+        )
+
+    @override_settings(PAYPAL_TEST=True)
+    def test_sandbox_pdt_uses_paypal_webscr_endpoint(self):
+        self.assertEqual(
+            PayPalPDT().get_endpoint(),
+            "https://www.sandbox.paypal.com/cgi-bin/webscr",
+        )

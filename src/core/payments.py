@@ -2,8 +2,15 @@ from decimal import Decimal, InvalidOperation
 
 from django.conf import settings
 from django.urls import reverse
+import paypal.standard.pdt.models as paypal_pdt_models
 
 from .constants import PDA_PRICE
+
+
+# django-paypal 2.1 uses its IPN postback endpoints for PDT validation.
+# PayPal PDT requires the standard webscr endpoints for _notify-synch.
+paypal_pdt_models.POSTBACK_ENDPOINT = "https://www.paypal.com/cgi-bin/webscr"
+paypal_pdt_models.SANDBOX_POSTBACK_ENDPOINT = "https://www.sandbox.paypal.com/cgi-bin/webscr"
 
 VALID_PAYMENT_AMOUNTS = {
     Decimal(str(PDA_PRICE)),
