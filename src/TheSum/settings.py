@@ -242,7 +242,7 @@ if not DEBUG:
 # Paypal SETTINGS
 # we will need to change the identity token and email to Elliott's account
 if IS_PRODUCTION:
-    PAYPAL_TEST = False
+    PAYPAL_TEST = env.bool('PAYPAL_TEST', default=False)
 
     PAYPAL_IDENTITY_TOKEN = env('PAYPAL_IDENTITY_TOKEN')
     PAYPAL_RECEIVER_EMAIL = env_first('PAYPAL_RECEIVER_EMAIL', 'PAYPAL_RECIEVER_EMAIL')
