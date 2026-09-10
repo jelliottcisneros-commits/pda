@@ -2021,3 +2021,26 @@ class PayPalPDTEndpointTests(TestCase):
             PayPalPDT().get_endpoint(),
             "https://www.sandbox.paypal.com/cgi-bin/webscr",
         )
+
+
+class PayPalPDTModernReturnCompatibilityTests(TestCase):
+    def test_iso_8601_payment_date_is_accepted(self):
+        from paypal.standard.pdt.forms import PayPalPDTForm
+
+        payment_date = PayPalPDTForm.base_fields["payment_date"].clean(
+            "2026-09-10T16:09:27Z"
+        )
+
+        self.assertEqual(
+            payment_date.isoformat(),
+            "2026-09-10T16:09:27+00:00",
+        )
+
+    def test_nonnumeric_notify_version_is_accepted_as_metadata(self):
+        from paypal.standard.pdt.forms import PayPalPDTForm
+
+        notify_version = PayPalPDTForm.base_fields["notify_version"].clean(
+            "UNVERSIONED"
+        )
+
+        self.assertIsNone(notify_version)

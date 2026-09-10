@@ -1,7 +1,12 @@
 from decimal import Decimal, InvalidOperation
 
+from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.urls import reverse
+from django.utils.dateparse import parse_datetime
+from paypal.standard.forms import PayPalDateTimeField
+from paypal.standard.pdt.forms import PayPalPDTForm
 import paypal.standard.pdt.models as paypal_pdt_models
 
 from .constants import PDA_PRICE
@@ -11,6 +16,41 @@ from .constants import PDA_PRICE
 # PayPal PDT requires the standard webscr endpoints for _notify-synch.
 paypal_pdt_models.POSTBACK_ENDPOINT = "https://www.paypal.com/cgi-bin/webscr"
 paypal_pdt_models.SANDBOX_POSTBACK_ENDPOINT = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+
+# django-paypal 2.1 expects PayPal's legacy timestamp format, while current
+# PayPal responses may use ISO 8601 (for example 2026-09-10T16:09:27Z).
+class PayPalCompatibleDateTimeField(PayPalDateTimeField):
+    def to_python(self, value):
+        if isinstance(value, str):
+            parsed = parse_datetime(value.strip())
+            if parsed is not None:
+                return parsed
+        return super().to_python(value)
+
+
+# Current PayPal responses may send a nonnumeric notify_version. It is
+# protocol metadata and is not used to validate the payment itself.
+class PayPalCompatibleNotifyVersionField(forms.DecimalField):
+    def to_python(self, value):
+        try:
+            return super().to_python(value)
+        except ValidationError:
+            return None
+
+
+_payment_date_field = PayPalPDTForm.base_fields["payment_date"]
+PayPalPDTForm.base_fields["payment_date"] = PayPalCompatibleDateTimeField(
+    required=_payment_date_field.required,
+    label=_payment_date_field.label,
+)
+
+_notify_version_field = PayPalPDTForm.base_fields["notify_version"]
+PayPalPDTForm.base_fields["notify_version"] = PayPalCompatibleNotifyVersionField(
+    required=_notify_version_field.required,
+    label=_notify_version_field.label,
+    max_digits=_notify_version_field.max_digits,
+    decimal_places=_notify_version_field.decimal_places,
+)
 
 VALID_PAYMENT_AMOUNTS = {
     Decimal(str(PDA_PRICE)),
