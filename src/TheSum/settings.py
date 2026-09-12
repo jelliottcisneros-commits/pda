@@ -86,7 +86,6 @@ CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 # Application definition
 
 INSTALLED_APPS = [
-    'suit.apps.DjangoSuitConfig',
     'core.apps.CoreConfig',
     'visualization.apps.VisualizationConfig',
     'django.contrib.admin',
