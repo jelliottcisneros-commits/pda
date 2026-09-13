@@ -323,6 +323,71 @@ def calculate(category, all_score_id):
     return result
 
 
+
+def calculate_power_quotients(
+    sensitivity_total,
+    oneness_total,
+    strength_total,
+    appreciation_total,
+    leveraged_total,
+    maximum_total,
+):
+    """Return APQ and UUPQ percentages using the existing leveraging logic."""
+    if maximum_total <= 0:
+        raise ValueError("maximum_total must be greater than zero")
+
+    leveraged_difference = maximum_total - leveraged_total
+
+    uupq = round(
+        (
+            sensitivity_total
+            + oneness_total
+            + strength_total
+            + appreciation_total
+            + leveraged_difference
+        )
+        * 100
+        / (maximum_total * 5),
+        1,
+    )
+
+    apq = round(100 - uupq, 1)
+
+    return {
+        "apq": apq,
+        "uupq": uupq,
+    }
+
+
+
+def calculate_category_power_quotients(category, all_score_id):
+    """Return APQ and UUPQ percentages for one sociocultural location."""
+    sensitivity_total = 0
+    oneness_total = 0
+    strength_total = 0
+    appreciation_total = 0
+    leveraged_total = 0
+
+    for item in all_score_id:
+        category_score = getattr(item, category)
+        sensitivity_total += category_score.sensitivity
+        oneness_total += category_score.oneness
+        strength_total += category_score.strength
+        appreciation_total += category_score.appreciation
+        leveraged_total += category_score.leveraged
+
+    maximum_total = 8 * len(all_score_id)
+
+    return calculate_power_quotients(
+        sensitivity_total=sensitivity_total,
+        oneness_total=oneness_total,
+        strength_total=strength_total,
+        appreciation_total=appreciation_total,
+        leveraged_total=leveraged_total,
+        maximum_total=maximum_total,
+    )
+
+
 def calculate_leverage(all_score_id):
     TOTAL_COUNT = 56 * len(all_score_id)
     sensitivity = list()

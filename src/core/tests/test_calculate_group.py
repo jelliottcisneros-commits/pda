@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 from django.test import TestCase
 
-from core.calculate_group import calculate, calculate_leverage
+from core.calculate_group import calculate, calculate_leverage, calculate_power_quotients, calculate_category_power_quotients
 from core.models import Score
 from core.tests.utils import create_assessment, create_user
 
@@ -37,6 +37,53 @@ class CalculateGroupTests(TestCase):
 
         total_result = calculate("Total_Score", [score1, score2])
         self.assertEqual(total_result, [(26.8, 44.6, 62.5, 80.4, 80.4)])
+
+
+    def test_calculate_power_quotients_known_category_result(self):
+        result = calculate_power_quotients(
+            sensitivity_total=6,
+            oneness_total=10,
+            strength_total=14,
+            appreciation_total=10,
+            leveraged_total=4,
+            maximum_total=16,
+        )
+
+        self.assertEqual(result, {
+            "apq": 35.0,
+            "uupq": 65.0,
+        })
+
+
+    def test_calculate_category_power_quotients_known_religion_result(self):
+        item1 = SimpleNamespace(
+            Religion_Score=SimpleNamespace(
+                sensitivity=2,
+                oneness=4,
+                strength=6,
+                appreciation=8,
+                leveraged=0,
+            )
+        )
+        item2 = SimpleNamespace(
+            Religion_Score=SimpleNamespace(
+                sensitivity=4,
+                oneness=6,
+                strength=8,
+                appreciation=2,
+                leveraged=4,
+            )
+        )
+
+        result = calculate_category_power_quotients(
+            "Religion_Score",
+            [item1, item2],
+        )
+
+        self.assertEqual(result, {
+            "apq": 35.0,
+            "uupq": 65.0,
+        })
 
 
     def test_religion_group_percent_known_result(self):
