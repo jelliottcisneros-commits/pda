@@ -615,7 +615,7 @@ class PayTest(TestCase):
         response = self.client.get(reverse('core:choose_access_type', kwargs=dict(user_id=self.user.pk)))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'input type="hidden" name="cmd"')
-        self.assertContains(response, "$47.00")
+        self.assertContains(response, "$97.00")
         self.assertNotContains(response, "$150.00")
         self.assertNotContains(response, "$100.00")
         self.assertNotContains(response, "$50.00")

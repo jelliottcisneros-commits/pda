@@ -32,4 +32,4 @@ NUM_QUESTIONS = 70
 INCORRECT_RESPONSE_MESSAGE = 'Incorrect response submitted'
 CANCELLED_PAYMENT_MESSAGE = 'Payment has been cancelled'
 INVALID_PAYMENT_MESSAGE = 'Invalid Payment'
-PDA_PRICE = 47
+PDA_PRICE = 97
