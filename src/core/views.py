@@ -40,6 +40,7 @@ from .payments import build_absolute_url, is_valid_pdt_payment
 from .constants import PDA_PRICE
 from .tokens import token_generator_for_abstract_user
 from .utilities import group_result
+from .presentation_data import calculate_individual_anya_power_quotients
 
 
 def pdf_static_path(path):
@@ -617,16 +618,19 @@ def generate_pdf(item, called_from_admin_site):
     renderPDF.draw(d, p, 260, 6.1 * inch, showBoundary=False)
 
     # bar graph of unacknowledged power quotient
-    leveraged_difference = 56 - score.leveraged_total
-    total = score.sensitivity_total + score.oneness_total + score.strength_total + score.appreciation_total + leveraged_difference
-    percentage = int(round((float(total) / float(280)), 2) * 100)
-    round(percentage, 2)
+    anya = calculate_individual_anya_power_quotients([score])[0]
+    actualized_percentage = anya["actualized"]
+    nya_percentage = anya["not_yet_actualized"]
+
     d = Drawing(5.25 * inch, 2.8 * inch)
+
+    # A/NYA orientation is intentionally:
+    # Actualized Power LEFT, Not-Yet-Actualized Power RIGHT.
     data = [
-        [percentage],
-        [100 - percentage]
+        [actualized_percentage],
+        [nya_percentage],
     ]
-    # bc = HorizontalBarChart3D()
+
     bc = HorizontalBarChart()
     bc.data = data
     bc.strokeColor = colors.black
@@ -636,34 +640,34 @@ def generate_pdf(item, called_from_admin_site):
     bc.barWidth = .1 * inch
     bc.width = 2.3 * inch
     bc.height = 0.6 * inch
-    # bc.zDepth = 0.04 * inch
+
     bc.barLabelArray = [
-        str(percentage) + r"%",
-        str(100 - percentage) + r"%"
+        str(actualized_percentage) + r"%",
+        str(nya_percentage) + r"%",
     ]
     bc.barLabelFormat = "%s"
     bc.barLabels.fontName = 'Helvetica-Bold'
     bc.barLabels.fontSize = 13
-    # centers labels within respective bars
-    bc.barLabels[0].dx = -2.5 * float(percentage / 200) * inch
-    bc.barLabels[1].dx = -2.5 * float((100 - percentage) / 200) * inch
+
+    # Center labels within their respective portions.
+    bc.barLabels[0].dx = -2.5 * float(actualized_percentage / 200) * inch
+    bc.barLabels[1].dx = -2.5 * float(nya_percentage / 200) * inch
+
     bc.bars[0].fillColor = HexColor("#7CA04F")
     bc.bars[1].fillColor = HexColor("#5589B6")
     bc.categoryAxis.style = 'stacked'
+
     d.add(bc)
     renderPDF.draw(d, p, 365, 6.6 * inch, showBoundary=False)
 
-    # title for unacknowledged power quotient chart
     p.setFont("Helvetica-Bold", 7)
-    p.drawString(5.4 * inch, 7.4 * inch, "* Unknown/Unacknowledged Power Quotient")
+    p.drawString(5.4 * inch, 7.4 * inch, "* A/NYA Power Quotient")
 
-    # Set the dimensions of the rectangle
+    # Set the dimensions of the explanatory rectangle.
     x = 5.5 * inch
     y = 5.9 * inch
     width = 2 * inch
     height = 0.6 * inch
-
-    # Draw the rectangle
     p.rect(x, y, width, height)
 
     header_par1 = ParagraphStyle(
@@ -674,12 +678,13 @@ def generate_pdf(item, called_from_admin_site):
         alignment=TA_LEFT,
         leading=17
     )
-    # Create the paragraph text dynamically
-    remaining_percentage = 100 - percentage
-    par_text = f'''{percentage}% conflicts, {remaining_percentage}% is aligned <br/>with a Leveraged Perspective.'''
-    # Create the paragraph
+
+    par_text = (
+        f"{actualized_percentage}% Actualized Power"
+        f"<br/>{nya_percentage}% Not-Yet-Actualized Power."
+    )
+
     par1 = Paragraph(par_text, header_par1)
-    # par1 = Paragraph("""33% conflicts, 67% is aligned, <br/>with a Leveraged Perspective.""", header_par1)
     par1.wrapOn(p, 10 * inch, 3 * inch)
     par1.drawOn(p, 400, 430)
 
