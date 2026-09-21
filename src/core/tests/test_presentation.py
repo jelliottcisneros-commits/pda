@@ -341,3 +341,125 @@ class GroupPresentationTests(TestCase):
         self.assertIn("Religion", slide_text)
         self.assertIn("Race", slide_text)
         self.assertIn("4 or more", slide_text)
+
+    def test_primary_pattern_slide_includes_group_pattern_totals(self):
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=50,
+                oneness_total=20,
+                strength_total=10,
+                appreciation_total=20,
+                leveraged_total=40,
+            ),
+            SimpleNamespace(
+                sensitivity_total=40,
+                oneness_total=30,
+                strength_total=20,
+                appreciation_total=20,
+                leveraged_total=40,
+            ),
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=40,
+                strength_total=30,
+                appreciation_total=20,
+                leveraged_total=40,
+            ),
+        ]
+
+        _attach_default_area_scores(scores)
+
+        result = generate_group_presentation(scores)
+
+        result.seek(0)
+        prs = Presentation(result)
+
+        slide_text = "\n".join(
+            shape.text
+            for shape in prs.slides[0].shapes
+            if hasattr(shape, "text")
+        )
+
+        self.assertIn("Group Pattern Scores", slide_text)
+        self.assertIn("Sensitivity: 100", slide_text)
+        self.assertIn("Oneness: 90", slide_text)
+        self.assertIn("Strength: 60", slide_text)
+
+    def test_generate_group_presentation_includes_individual_anya_distribution(self):
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+            SimpleNamespace(
+                sensitivity_total=20,
+                oneness_total=30,
+                strength_total=40,
+                appreciation_total=50,
+                leveraged_total=40,
+            ),
+            SimpleNamespace(
+                sensitivity_total=30,
+                oneness_total=20,
+                strength_total=10,
+                appreciation_total=20,
+                leveraged_total=30,
+            ),
+        ]
+
+        _attach_default_area_scores(scores)
+
+        result = generate_group_presentation(scores)
+
+        result.seek(0)
+        prs = Presentation(result)
+
+        self.assertGreaterEqual(len(prs.slides), 5)
+
+        slide_text = "\n".join(
+            shape.text
+            for shape in prs.slides[4].shapes
+            if hasattr(shape, "text")
+        )
+
+        self.assertIn("Individual A/NYA Distribution", slide_text)
+        self.assertIn("Actualized Power", slide_text)
+        self.assertIn("Not-Yet-Actualized Power", slide_text)
+        self.assertIn("Each point represents one respondent", slide_text)
+
+    def test_individual_anya_axis_runs_from_100_actualized_to_0_actualized(self):
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+        ]
+
+        _attach_default_area_scores(scores)
+
+        result = generate_group_presentation(scores)
+        result.seek(0)
+        prs = Presentation(result)
+
+        slide = prs.slides[4]
+
+        percentage_shapes = {
+            shape.text: shape.left
+            for shape in slide.shapes
+            if hasattr(shape, "text") and shape.text in {"100%", "0%"}
+        }
+
+        self.assertIn("100%", percentage_shapes)
+        self.assertIn("0%", percentage_shapes)
+
+        # 100% Actualized must be physically LEFT of 0% Actualized.
+        self.assertLess(
+            percentage_shapes["100%"],
+            percentage_shapes["0%"],
+        )

@@ -1,13 +1,16 @@
 import io
 
 from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Inches, Pt
 
 from .presentation_data import (
     calculate_primary_pattern_counts,
+    calculate_primary_pattern_totals,
     calculate_group_primary_patterns,
     calculate_learning_edge_counts,
     calculate_group_anya_power_quotients,
+    calculate_individual_anya_power_quotients,
     calculate_individual_power_quotients_by_area,
     calculate_area_extreme_counts,
     calculate_appreciation_totals_by_area,
@@ -155,6 +158,40 @@ def generate_group_presentation(scores):
         )
 
         edge_top += 0.7
+
+    group_pattern_totals = calculate_primary_pattern_totals(scores)
+
+    _add_textbox(
+        slide,
+        "Group Pattern Scores",
+        left=8.2,
+        top=5.25,
+        width=4.0,
+        height=0.5,
+        font_size=18,
+        bold=True,
+    )
+
+    pattern_score_rows = (
+        ("Sensitivity", group_pattern_totals["sensitivity"]),
+        ("Oneness", group_pattern_totals["oneness"]),
+        ("Strength", group_pattern_totals["strength"]),
+    )
+
+    score_top = 5.8
+
+    for label, value in pattern_score_rows:
+        _add_textbox(
+            slide,
+            f"{label}: {value}",
+            left=8.2,
+            top=score_top,
+            width=3.8,
+            height=0.4,
+            font_size=15,
+        )
+
+        score_top += 0.45
 
     # --------------------------------------------------------
     # Slide 2: Group A/NYA Power Quotient
@@ -421,6 +458,119 @@ def generate_group_presentation(scores):
         )
 
         top += 0.55
+
+    # --------------------------------------------------------
+    # Slide 5: Anonymous Individual A/NYA Distribution
+    # --------------------------------------------------------
+    individual_anya = calculate_individual_anya_power_quotients(scores)
+
+    slide = prs.slides.add_slide(blank_layout)
+
+    _add_textbox(
+        slide,
+        "Individual A/NYA Distribution",
+        left=0.8,
+        top=0.5,
+        width=11.7,
+        height=0.7,
+        font_size=28,
+        bold=True,
+    )
+
+    _add_textbox(
+        slide,
+        "Actualized Power",
+        left=1.0,
+        top=1.6,
+        width=3.0,
+        height=0.5,
+        font_size=18,
+        bold=True,
+    )
+
+    _add_textbox(
+        slide,
+        "Not-Yet-Actualized Power",
+        left=9.0,
+        top=1.6,
+        width=3.3,
+        height=0.5,
+        font_size=18,
+        bold=True,
+    )
+
+    _add_textbox(
+        slide,
+        "Each point represents one respondent",
+        left=4.1,
+        top=1.6,
+        width=4.8,
+        height=0.5,
+        font_size=16,
+    )
+
+    # Continuum runs from 0% NYA on the left to 100% NYA on the right.
+    axis_left = 1.2
+    axis_top = 4.0
+    axis_width = 10.8
+
+    axis = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE,
+        Inches(axis_left),
+        Inches(axis_top),
+        Inches(axis_width),
+        Inches(0.04),
+    )
+    axis.line.fill.background()
+
+    _add_textbox(
+        slide,
+        "100%",
+        left=axis_left - 0.15,
+        top=4.15,
+        width=0.8,
+        height=0.4,
+        font_size=14,
+    )
+
+    _add_textbox(
+        slide,
+        "0%",
+        left=axis_left + axis_width - 0.55,
+        top=4.15,
+        width=0.8,
+        height=0.4,
+        font_size=14,
+    )
+
+    for index, person in enumerate(individual_anya):
+        nya = person["not_yet_actualized"]
+
+        x_position = axis_left + (axis_width * (nya / 100.0))
+
+        # Slight vertical staggering prevents identical values from
+        # completely covering each other while preserving anonymity.
+        y_position = 3.45 - ((index % 3) * 0.28)
+
+        dot = slide.shapes.add_shape(
+            MSO_SHAPE.OVAL,
+            Inches(x_position - 0.09),
+            Inches(y_position),
+            Inches(0.18),
+            Inches(0.18),
+        )
+
+        dot.line.fill.background()
+
+    _add_textbox(
+        slide,
+        "100% Actualized  <-------------------->  Not-Yet-Actualized (0% Actualized)",
+        left=1.2,
+        top=5.0,
+        width=10.8,
+        height=0.5,
+        font_size=14,
+    )
 
     output = io.BytesIO()
     prs.save(output)
