@@ -572,6 +572,65 @@ def generate_group_presentation(scores):
         font_size=14,
     )
 
+    # --------------------------------------------------------
+    # Slide 6: Integration
+    # Conceptual framing only — intentionally no Integration score.
+    # --------------------------------------------------------
+    slide = prs.slides.add_slide(blank_layout)
+
+    _add_textbox(
+        slide,
+        "Integration: Being Home in Ourselves",
+        left=0.8,
+        top=0.5,
+        width=11.7,
+        height=0.7,
+        font_size=28,
+        bold=True,
+    )
+
+    _add_textbox(
+        slide,
+        "Integration is having access to mind, heart, and courage "
+        "without being governed by any one of them.",
+        left=1.2,
+        top=1.55,
+        width=10.8,
+        height=0.9,
+        font_size=20,
+    )
+
+    _add_textbox(slide, "MIND\nSensitivity", left=1.0, top=3.0,
+                 width=3.2, height=0.9, font_size=18, bold=True)
+
+    _add_textbox(slide, "HEART\nOneness", left=5.05, top=3.0,
+                 width=3.2, height=0.9, font_size=18, bold=True)
+
+    _add_textbox(slide, "COURAGE\nStrength", left=9.05, top=3.0,
+                 width=3.2, height=0.9, font_size=18, bold=True)
+
+    _add_textbox(
+        slide,
+        "Sovereignty: conscious agency and coordination",
+        left=2.4,
+        top=4.45,
+        width=8.6,
+        height=0.6,
+        font_size=19,
+        bold=True,
+    )
+
+    _add_textbox(
+        slide,
+        "Integration is being home in ourselves.\n"
+        "Actualization is what becomes possible from home.",
+        left=2.0,
+        top=5.45,
+        width=9.4,
+        height=0.9,
+        font_size=18,
+    )
+
     output = io.BytesIO()
     prs.save(output)
     output.seek(0)

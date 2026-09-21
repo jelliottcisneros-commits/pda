@@ -463,3 +463,34 @@ class GroupPresentationTests(TestCase):
             percentage_shapes["100%"],
             percentage_shapes["0%"],
         )
+
+
+    def test_generate_group_presentation_includes_integration_slide(self):
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+        ]
+
+        _attach_default_area_scores(scores)
+
+        result = generate_group_presentation(scores)
+        result.seek(0)
+        prs = Presentation(result)
+
+        self.assertGreaterEqual(len(prs.slides), 6)
+
+        slide_text = "\n".join(
+            shape.text
+            for shape in prs.slides[5].shapes
+            if hasattr(shape, "text")
+        )
+
+        self.assertIn("Integration: Being Home in Ourselves", slide_text)
+        self.assertIn("mind, heart, and courage", slide_text)
+        self.assertIn("Sovereignty: conscious agency and coordination", slide_text)
+        self.assertIn("Actualization is what becomes possible from home", slide_text)
