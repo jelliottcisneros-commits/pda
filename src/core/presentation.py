@@ -11,6 +11,7 @@ from .presentation_data import (
     calculate_learning_edge_counts,
     calculate_group_anya_power_quotients,
     calculate_individual_anya_power_quotients,
+    calculate_average_individual_anya_power_quotients,
     calculate_individual_power_quotients_by_area,
     calculate_area_extreme_counts,
     calculate_appreciation_totals_by_area,
@@ -463,6 +464,7 @@ def generate_group_presentation(scores):
     # Slide 5: Anonymous Individual A/NYA Distribution
     # --------------------------------------------------------
     individual_anya = calculate_individual_anya_power_quotients(scores)
+    average_anya = calculate_average_individual_anya_power_quotients(scores)
 
     slide = prs.slides.add_slide(blank_layout)
 
@@ -508,6 +510,18 @@ def generate_group_presentation(scores):
         height=0.5,
         font_size=16,
     )
+
+    if average_anya:
+        _add_textbox(
+            slide,
+            f'Group average: {average_anya["actualized"]}% Actualized / '
+            f'{average_anya["not_yet_actualized"]}% Not-Yet-Actualized',
+            left=3.2,
+            top=2.0,
+            width=6.5,
+            height=0.45,
+            font_size=14,
+        )
 
     # Continuum runs from 0% NYA on the left to 100% NYA on the right.
     axis_left = 1.2
