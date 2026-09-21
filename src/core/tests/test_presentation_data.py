@@ -555,3 +555,33 @@ class PresentationDataTests(TestCase):
             "observed": 120,
             "possible": 168,
         })
+
+
+    def test_average_individual_anya_power_quotients(self):
+        from core.presentation_data import (
+            calculate_average_individual_anya_power_quotients,
+        )
+
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+            SimpleNamespace(
+                sensitivity_total=20,
+                oneness_total=30,
+                strength_total=40,
+                appreciation_total=50,
+                leveraged_total=40,
+            ),
+        ]
+
+        result = calculate_average_individual_anya_power_quotients(scores)
+
+        self.assertEqual(result, {
+            "actualized": 53.2,
+            "not_yet_actualized": 46.8,
+        })

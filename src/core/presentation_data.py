@@ -347,3 +347,22 @@ def calculate_group_appreciation_summary(scores):
         "observed": sum(score.appreciation_total for score in scores),
         "possible": 56 * len(scores),
     }
+
+
+def calculate_average_individual_anya_power_quotients(scores):
+    """Return the arithmetic mean of anonymous individual A/NYA results."""
+    individual_results = calculate_individual_anya_power_quotients(scores)
+
+    if not individual_results:
+        return None
+
+    actualized = round(
+        sum(result["actualized"] for result in individual_results)
+        / len(individual_results),
+        1,
+    )
+
+    return {
+        "actualized": actualized,
+        "not_yet_actualized": round(100.0 - actualized, 1),
+    }
