@@ -346,6 +346,7 @@ def calculate_group_appreciation_summary(scores):
     return {
         "observed": sum(score.appreciation_total for score in scores),
         "possible": 56 * len(scores),
+        "possible_per_area": 8 * len(scores),
     }
 
 

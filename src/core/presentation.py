@@ -440,7 +440,8 @@ def generate_group_presentation(scores):
     for area_name, label in area_labels.items():
         _add_textbox(
             slide,
-            f"{label}: {appreciation_totals[area_name]}",
+            f"{label}: {appreciation_totals[area_name]} / "
+            f"{appreciation_summary['possible_per_area']}",
             left=1.0,
             top=top,
             width=4.5,

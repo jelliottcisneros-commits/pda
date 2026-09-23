@@ -341,6 +341,8 @@ class GroupPresentationTests(TestCase):
         self.assertIn("Religion", slide_text)
         self.assertIn("Race", slide_text)
         self.assertIn("4 or more", slide_text)
+        self.assertIn("Religion: 11 / 24", slide_text)
+        self.assertIn("Race: 11 / 24", slide_text)
 
     def test_primary_pattern_slide_includes_group_pattern_totals(self):
         scores = [

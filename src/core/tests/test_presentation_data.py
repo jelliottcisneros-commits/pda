@@ -554,6 +554,7 @@ class PresentationDataTests(TestCase):
         self.assertEqual(result, {
             "observed": 120,
             "possible": 168,
+            "possible_per_area": 24,
         })
 
 
