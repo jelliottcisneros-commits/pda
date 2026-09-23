@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from unittest import TestCase
 
 from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 
 from core.presentation import generate_group_presentation
 
@@ -431,6 +432,58 @@ class GroupPresentationTests(TestCase):
         self.assertIn("Actualized Power", slide_text)
         self.assertIn("Not-Yet-Actualized Power", slide_text)
         self.assertIn("Each point represents one respondent", slide_text)
+
+    def test_duplicate_individual_anya_values_stack_vertically(self):
+        scores = [
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+            SimpleNamespace(
+                sensitivity_total=10,
+                oneness_total=20,
+                strength_total=30,
+                appreciation_total=40,
+                leveraged_total=50,
+            ),
+            SimpleNamespace(
+                sensitivity_total=30,
+                oneness_total=20,
+                strength_total=10,
+                appreciation_total=20,
+                leveraged_total=30,
+            ),
+        ]
+
+        _attach_default_area_scores(scores)
+
+        result = generate_group_presentation(scores)
+        result.seek(0)
+        prs = Presentation(result)
+
+        slide = prs.slides[4]
+
+        dots = [
+            shape
+            for shape in slide.shapes
+            if (
+                shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE
+                and shape.auto_shape_type == MSO_SHAPE.OVAL
+            )
+        ]
+
+        self.assertEqual(len(dots), 3)
+
+        duplicate_dots = [
+            dot for dot in dots
+            if dot.left == dots[0].left
+        ]
+
+        self.assertEqual(len(duplicate_dots), 3)
+        self.assertEqual(len({dot.top for dot in duplicate_dots}), 3)
 
     def test_individual_anya_axis_runs_from_100_actualized_to_0_actualized(self):
         scores = [

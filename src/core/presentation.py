@@ -3,6 +3,7 @@ import io
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Inches, Pt
+from pptx.dml.color import RGBColor
 
 from .presentation_data import (
     calculate_primary_pattern_counts,
@@ -524,48 +525,119 @@ def generate_group_presentation(scores):
             font_size=14,
         )
 
-    # Continuum runs from 0% NYA on the left to 100% NYA on the right.
+    # Continuum: 100% Actualized on the left, 0% Actualized on the right.
     axis_left = 1.2
     axis_top = 4.0
     axis_width = 10.8
+    axis_right = axis_left + axis_width
 
+    # Neutral base line.
     axis = slide.shapes.add_shape(
         MSO_SHAPE.RECTANGLE,
         Inches(axis_left),
         Inches(axis_top),
         Inches(axis_width),
-        Inches(0.04),
+        Inches(0.05),
     )
+    axis.fill.solid()
+    axis.fill.fore_color.rgb = RGBColor(110, 110, 110)
     axis.line.fill.background()
 
-    _add_textbox(
-        slide,
-        "100%",
-        left=axis_left - 0.15,
-        top=4.15,
-        width=0.8,
-        height=0.4,
-        font_size=14,
-    )
+    # Live group-average marker and blue segment.
+    # Because the horizontal coordinate is NYA, the marker moves left
+    # as Actualized Power increases.
+    if average_anya:
+        average_nya = average_anya["not_yet_actualized"]
+        average_x = axis_left + (axis_width * (average_nya / 100.0))
 
-    _add_textbox(
-        slide,
-        "0%",
-        left=axis_left + axis_width - 0.55,
-        top=4.15,
-        width=0.8,
-        height=0.4,
-        font_size=14,
-    )
+        blue_width = max(0, axis_right - average_x)
+        if blue_width:
+            blue_segment = slide.shapes.add_shape(
+                MSO_SHAPE.RECTANGLE,
+                Inches(average_x),
+                Inches(axis_top - 0.035),
+                Inches(blue_width),
+                Inches(0.12),
+            )
+            blue_segment.fill.solid()
+            blue_segment.fill.fore_color.rgb = RGBColor(91, 155, 213)
+            blue_segment.line.fill.background()
 
-    for index, person in enumerate(individual_anya):
+        average_marker = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            Inches(average_x - 0.025),
+            Inches(axis_top - 0.48),
+            Inches(0.05),
+            Inches(0.95),
+        )
+        average_marker.fill.solid()
+        average_marker.fill.fore_color.rgb = RGBColor(40, 40, 40)
+        average_marker.line.fill.background()
+
+    # Reference ticks show Actualized Power from left to right.
+    for actualized in (100, 75, 50, 25, 0):
+        nya = 100 - actualized
+        tick_x = axis_left + (axis_width * (nya / 100.0))
+
+        tick = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            Inches(tick_x - 0.01),
+            Inches(axis_top - 0.06),
+            Inches(0.02),
+            Inches(0.18),
+        )
+        tick.fill.solid()
+        tick.fill.fore_color.rgb = RGBColor(80, 80, 80)
+        tick.line.fill.background()
+
+        _add_textbox(
+            slide,
+            f"{actualized}%",
+            left=tick_x - 0.28,
+            top=axis_top + 0.18,
+            width=0.56,
+            height=0.35,
+            font_size=13,
+        )
+
+    # Inward-pointing end-cap triangles.
+    left_cap = slide.shapes.add_shape(
+        MSO_SHAPE.ISOSCELES_TRIANGLE,
+        Inches(axis_left - 0.18),
+        Inches(axis_top - 0.07),
+        Inches(0.18),
+        Inches(0.18),
+    )
+    left_cap.rotation = 90
+    left_cap.fill.solid()
+    left_cap.fill.fore_color.rgb = RGBColor(80, 80, 80)
+    left_cap.line.fill.background()
+
+    right_cap = slide.shapes.add_shape(
+        MSO_SHAPE.ISOSCELES_TRIANGLE,
+        Inches(axis_right),
+        Inches(axis_top - 0.07),
+        Inches(0.18),
+        Inches(0.18),
+    )
+    right_cap.rotation = 270
+    right_cap.fill.solid()
+    right_cap.fill.fore_color.rgb = RGBColor(80, 80, 80)
+    right_cap.line.fill.background()
+
+    # One anonymous dot per respondent.
+    # Identical scores stack vertically rather than being staggered arbitrarily.
+    stack_counts = {}
+
+    for person in individual_anya:
         nya = person["not_yet_actualized"]
-
         x_position = axis_left + (axis_width * (nya / 100.0))
 
-        # Slight vertical staggering prevents identical values from
-        # completely covering each other while preserving anonymity.
-        y_position = 3.45 - ((index % 3) * 0.28)
+        stack_key = round(float(nya), 1)
+        stack_index = stack_counts.get(stack_key, 0)
+        stack_counts[stack_key] = stack_index + 1
+
+        y_position = 3.45 - (stack_index * 0.28)
 
         dot = slide.shapes.add_shape(
             MSO_SHAPE.OVAL,
@@ -574,7 +646,6 @@ def generate_group_presentation(scores):
             Inches(0.18),
             Inches(0.18),
         )
-
         dot.line.fill.background()
 
     _add_textbox(
